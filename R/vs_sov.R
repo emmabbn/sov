@@ -1,6 +1,9 @@
 ########## VS-SOV FUNCTION ##########
 # external function.  			vs_sov() calculates vote-specific shapley owen values from package estimated inputs.
-#' vs_sov
+########################################
+#' Vote-Specific Shapley-Owen Values
+#'
+#' This function calculates vote-specific Shapley-Owen values (vs-SOVs) from package estimated inputs.
 #'
 #' @param estimates Estimation results from oc, wnom, or mcmcPack.
 #' @param weight_nom If TRUE use weights estimated from wnom output, if FALSE use vector of 1's. ... For wnom only.
@@ -13,12 +16,11 @@
 #' @param out_dir The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
 #' @param print_results If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 #'
-#' @returns Calculates vote-specific shapley owen values from package estimated inputs.
+#' @returns A list with data frames containing ideal points, vs-SOVs for each voter, number of pivots, name of pivot(s) for each roll call, and normal vectors and angles for each roll call.
 #' @export
 #'
-#' @examples
 vs_sov <- function(
-    estimates		= NULL,		# Estimation results from oc, wnom, or mcmcPack.
+    estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.
     weight_nom		= FALSE,	# If TRUE use weights estimated from wnom output, if FALSE use vector of 1's. ... For wnom only.
     absolute		= FALSE,	# If TRUE, q is a scalar of yeas needed to pass proposal.  If FALSE, pr is the proportion of yeas need to pass a proposal among voters attending.
     vw				= NULL,		# Vector of weights for each voter (default 1 for each member, applied later).

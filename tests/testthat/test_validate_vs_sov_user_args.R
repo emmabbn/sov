@@ -283,6 +283,29 @@ test_that("Length of vw must match number of voters in votes (checked later)", {
   )
 })
 
+test_that("validate_vs_sov_user_args passes through vw = NULL; defaulting left to caller", {
+  ideals  <- rbind(c(0.7,0.7), c(-0.5,0.5))
+  normals <- rbind(c(1,0), c(0,1))
+  votes   <- cbind(RC1 = c(1,0), RC2 = c(0,1))
+
+  res <- validate_vs_sov_user_args(
+    ideals     = ideals,
+    normals    = normals,
+    midpoints  = NULL,
+    weight_nom = FALSE,
+    absolute   = FALSE,
+    vw         = NULL,          # <- omitted on purpose
+    q          = NULL,
+    pr         = 0.5001,
+    votes      = votes,
+    dec        = 3,
+    out_dir    = ".",
+    print_results = FALSE
+  )
+
+  expect_true(is.null(res$vw))
+})
+
 # ---- q validation ----
 test_that("q must be a single positive integer when provided", {
   expect_error(call_validate_user(list(q = 0)),       regexp = "`q` must be a single positive integer")

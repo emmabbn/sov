@@ -1,7 +1,9 @@
 ########## VS-SOV FUNCTION WITH USER INPUTS ##########
-
 # external function.  			vs_sov_user() calculates vote-specific shapley owen values from data provided by the user.
-#' vs_sov_user
+################
+#' Vote-Specific Shapley-Owen Values with User Inputs
+#'
+#' This function calculates vote-specific Shapley-Owen Values (vs-SOVs) from data provided by the user.
 #'
 #' @param ideals Matrix of ideal points (legislators x dimensions)
 #' @param normals Matrix of normal vectors (rollcalls x dimensions)

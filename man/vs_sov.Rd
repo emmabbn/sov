@@ -2,7 +2,7 @@
 % Please edit documentation in R/vs_sov.R
 \name{vs_sov}
 \alias{vs_sov}
-\title{vs_sov}
+\title{Vote-Specific Shapley-Owen Values}
 \usage{
 vs_sov(
   estimates = NULL,
@@ -39,8 +39,8 @@ vs_sov(
 \item{print_results}{If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.}
 }
 \value{
-Calculates vote-specific shapley owen values from package estimated inputs.
+A list with data frames containing ideal points, vs-SOVs for each voter, number of pivots, name of pivot(s) for each roll call, and normal vectors and angles for each roll call.
 }
 \description{
-vs_sov
+This function calculates vote-specific Shapley-Owen values (vs-SOVs) from package estimated inputs.
 }

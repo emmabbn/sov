@@ -2,7 +2,7 @@
 % Please edit documentation in R/sov_user.R
 \name{sov_user}
 \alias{sov_user}
-\title{sov_user}
+\title{Traditional Shapley-Owen Values with User Inputs}
 \usage{
 sov_user(
   ideals = NULL,
@@ -45,8 +45,8 @@ sov_user(
 \item{print_results}{If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.}
 }
 \value{
-calculates traditional shapley owen values from data provided by the user.
+A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
 }
 \description{
-sov_user
+This function calculates traditional Shapley-Owen values (SOVs) from data provided by the user.
 }

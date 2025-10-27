@@ -3,7 +3,8 @@
 #' @importFrom tidyr separate pivot_wider
 #' @importFrom tibble column_to_rownames
 #' @importFrom openxlsx createWorkbook addWorksheet writeData createStyle addStyle saveWorkbook
-
+#' @name utils
+#' @keywords internal
 NULL
 
 ##### normalize weights #####
@@ -844,19 +845,23 @@ validate_vs_sov_user_args <- function(ideals, normals, midpoints, weight_nom, ab
     stop("`absolute` must be a single logical value (TRUE or FALSE).")
   }
   # vw, if provided, must be a non-negative integer vector with length matching the number of voters.  NAs are permitted.
-  if (is.null(vw)){
-    vw <- rep(1, length=nrow(ideals))
-  } else {
+  if (!is.null(vw)) {
     if (!is.numeric(vw)) {
       stop("`vw` must be a vector of non-negative integers.  If missing, each member will be assigned an equal voting weight of 1.")
     }
-    # check whether non-NA entries are non-negative integers
     bad_int  <- !is.na(vw) & (vw %% 1 != 0)
     bad_sign <- !is.na(vw) & (vw < 0)
     if (any(bad_int) || any(bad_sign)) {
       stop("All non-NA entries of `vw` must be positive integers or zero.")
     }
-  }														# close else
+  }
+  # Check length when the user actually supplies vw
+  if (!is.null(vw) && length(vw) != nrow(votes)) {
+    stop(sprintf(
+      "Length of `vw` (%d) must match the number of voters in the vote matrix `votes` (nrow(votes) = %d).",
+      length(vw), nrow(votes)
+    ))
+  }
   # q, if provided, must be a single positive integer
   if (!is.null(q)) {
     if (!is.numeric(q) || length(q) != 1 || is.na(q) || q <= 0 || (q %% 1 != 0)) {
@@ -895,11 +900,7 @@ validate_vs_sov_user_args <- function(ideals, normals, midpoints, weight_nom, ab
   #      if ( !any(votes == 9, na.rm=TRUE) ) {
   #  	    message("Your vote matrix does not contain any 9s.\n The function works, just know that individuals who attend but do not vote (9s) can affect pivots.")
   #	  }
-  # make sure the number of dimensions match other matrices -- ideals and votes already checked
-  if (length(vw) != nrow(votes)) {
-    stop(sprintf("Length of `vw` (%d) must match the number of voters in the vote matrix `votes` (nrow(votes) = %d).", length(vw), nrow(votes)))
-  }
-  # return ideals (potentially modified), returns matrix of normals or midpoints (whichever not NULL), returns vector vw
+  # return ideals (potentially modified), matrix of normals or midpoints (whichever not NULL), and vector vw
   return(list(ideals=ideals, normals=normals, midpoints=midpoints, vw=vw))
 }
 

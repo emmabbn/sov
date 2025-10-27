@@ -1,7 +1,10 @@
 ########## TRADITIONAL SOV FUNCTION WITH USER INPUTS ##########
-
+#
 # external function.  			sov_user() calculates traditional shapley owen values from data provided by the user.
-#' sov_user
+#################
+#' Traditional Shapley-Owen Values with User Inputs
+#'
+#' This function calculates traditional Shapley-Owen values (SOVs) from data provided by the user.
 #'
 #' @param ideals Matrix of ideal points (legislators x dimensions)
 #' @param av Attendance vector coded attend=1, "not attend"=NA.
@@ -16,7 +19,7 @@
 #' @param out_dir The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
 #' @param print_results If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 #'
-#' @returns calculates traditional shapley owen values from data provided by the user.
+#' @returns A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
 #' @export
 #'
 #' @examples

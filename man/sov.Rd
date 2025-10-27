@@ -2,7 +2,7 @@
 % Please edit documentation in R/sov.R
 \name{sov}
 \alias{sov}
-\title{sov}
+\title{Traditional Shapley-Owen Values}
 \usage{
 sov(
   estimates = NULL,
@@ -20,7 +20,7 @@ sov(
 )
 }
 \arguments{
-\item{estimates}{Estimation results from oc, wnom, or mcmcPack.}
+\item{estimates}{Estimation results from oc, wnom, or MCMCpack.}
 
 \item{av}{Attendance vector coded attend=1, "not attend"=NA.}
 
@@ -45,8 +45,8 @@ sov(
 \item{print_results}{If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.}
 }
 \value{
-calculates traditional shapley owen values from package estimated inputs.
+A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
 }
 \description{
-sov
+This function calculates traditional Shapley-Owen values (SOVs) from package estimated inputs.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/vs_sov_user.R
 \name{vs_sov_user}
 \alias{vs_sov_user}
-\title{vs_sov_user}
+\title{Vote-Specific Shapley-Owen Values with User Inputs}
 \usage{
 vs_sov_user(
   ideals = NULL,
@@ -48,5 +48,5 @@ vs_sov_user(
 calculates vote-specific shapley owen values from data provided by the user.
 }
 \description{
-vs_sov_user
+This function calculates vote-specific Shapley-Owen Values (vs-SOVs) from data provided by the user.
 }
