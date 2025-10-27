@@ -45,7 +45,7 @@ vs_sov_user(
 \item{print_results}{If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.}
 }
 \value{
-calculates vote-specific shapley owen values from data provided by the user.
+A list with data frames containing ideal points, vs-SOVs for each voter, number of pivots, name of pivot(s) for each roll call, and normal vectors and angles for each roll call.
 }
 \description{
 This function calculates vote-specific Shapley-Owen Values (vs-SOVs) from data provided by the user.
@@ -93,4 +93,87 @@ This function calculates vote-specific Shapley-Owen Values (vs-SOVs) from data p
 # normal vectors and corresponding angles:
   out_simple$nv_and_angles
 
+# 2D Examples.  Start with Inputs
+# Ideals: 5 voters in 2D
+i1 <- c( 0.7,  0.7)
+i2 <- c(-0.5,  0.5)
+i3 <- c(-0.7, -0.7)
+i4 <- c( 0.5, -0.5)
+i5 <- c( 0.0,  0.0)
+ideals <- rbind(i1, i2, i3, i4, i5)
+rownames(ideals) <- paste0("i", 1:5)
+colnames(ideals) <- c("coord1D","coord2D")
+
+# Normals: 3 roll calls (x+, y+, x-)
+nv1 <- c( 1, 0)
+nv2 <- c( 0, 1)
+nv3 <- c(-1, 0)
+normals <- rbind(nv1, nv2, nv3)
+rownames(normals) <- paste0("RC", 1:3)
+
+# Votes: 1=yea, 0=nay, 9=attend but did not vote
+# For simple k-majority, only 0/1 determine the threshold; 9/NA are excluded.
+votes <- cbind(
+  RC1 = c(1, 0, 0, 1, 9),  # 9 = attended but did not vote
+  RC2 = c(1, 1, 0, 0, 0),
+  RC3 = c(0, 1, 1, 0, 0)
+)
+rownames(votes) <- rownames(ideals)
+
+#Equal voting weights
+vw <- rep(1, nrow(ideals))
+
+# EX2: Simple majority (50\% + e) among attendees in 2D
+out_simple <- vs_sov_user(
+  ideals   = ideals,
+  normals  = normals,   # or use `midpoints = ...` if you prefer
+  votes    = votes,
+  absolute = FALSE,     # simple k-majority
+  pr       = 0.5001,    # strict majority of attendees
+  vw       = vw,
+  dec      = 3
+)
+# aggregate results by member
+out_simple$pivot_summary
+# Per-roll-call pivot names:
+out_simple$pivot_by_rc
+# Normals + angles (degrees/radians) used for each roll call:
+out_simple$nv_and_angles
+
+# EX3: Using midpoints instead of normals in 2D
+# Midpoints corresponding to the normals above
+# Each row is where a cutplane intersects the normal vector
+mid1 <- c( 0.1,  0.0)   # RC1
+mid2 <- c( 0.0,  0.1)   # RC2
+mid3 <- c(-0.1,  0.0)   # RC3
+midpoints <- rbind(mid1, mid2, mid3)
+rownames(midpoints) <- paste0("RC", 1:3)
+colnames(midpoints) <- c("coord1D","coord2D")
+
+out_simple_mid <- vs_sov_user(
+  ideals    = ideals,
+  midpoints = midpoints,   # <- used in place of normals
+  votes     = votes,
+  absolute  = FALSE,
+  pr        = 0.5001,
+  vw        = vw,
+  dec       = 3
+)
+out_simple_mid$pivot_summary
+out_simple_mid$pivot_by_rc
+out_simple_mid$nv_and_angles
+
+# EX4: Supermajority (4/5) absolute example in 2D
+# For an absolute rule, set absolute = TRUE and pass an explicit quota q.
+out_4of5 <- vs_sov_user(
+  ideals   = ideals,
+  normals  = normals,
+  votes    = votes,
+  absolute = TRUE,   # absolute k-majority
+  q        = 4,      # 4 of 5
+  vw       = vw,
+  dec      = 3
+)
+out_4of5$pivot_summary
+out_4of5$pivot_by_rc
 }
