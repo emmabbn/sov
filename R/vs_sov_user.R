@@ -22,6 +22,48 @@
 #' @export
 #'
 #' @examples
+#' # 1D Example.  Start with Inputs
+#' # Ideals: 3 voters in 1D
+#'   i1 <-  0.7
+#'   i2 <-  0.0
+#'   i3 <- -0.7
+#'   ideals <- cbind(coord1D = c(i1, i2, i3))
+#'   rownames(ideals) <- paste0("i", 1:3)
+#' # Normals: 2 roll calls (x+, x-)
+#'   nv1 <-  1   # points to the right
+#'   nv2 <- -1   # points to the left
+#'   normals <- cbind(dim1 = c(nv1, nv2))
+#'   rownames(normals) <- paste0("RC", 1:2)
+#'  # Votes: 1=yea, 0=nay, 9=attend-no-vote, NA=absent
+#'  # For simple-majority thresholds, only 0/1 count towards the quota.
+#'   votes <- cbind(
+#'      RC1 = c(1, 0, 0),   # i1 yea, i2 nay, i3 nay
+#'      RC2 = c(0, 1, 1)    # i1 nay, i2 yea, i3 yea
+#'                  )
+#'   rownames(votes) <- rownames(ideals)
+#'  # Equal voting weights
+#'   vw <- rep(1, nrow(ideals))
+#'
+#'  # Vote-specific SOV (simple majority among attendees in 1D)
+#'   out_simple <- vs_sov_user(
+#'   ideals   = ideals,
+#'   normals  = normals,
+#'   votes    = votes,
+#'   absolute = FALSE,    # simple k-majority
+#'   pr       = 0.5001,   # strict majority of attendees
+#'   vw       = vw,
+#'   dec      = 3
+#'  )
+#'
+#' # aggregate results by member
+#'   out_simple$pivot_summary
+#'
+#' # pivot name(s) by roll call:
+#'   out_simple$pivot_by_rc
+#'
+#' # normal vectors and corresponding angles:
+#'   out_simple$nv_and_angles
+#'
 vs_sov_user <- function(
     ideals			= NULL,		# Matrix of ideal points (legislators x dimensions)
     normals			= NULL, 	# Matrix of normal vectors (rollcalls x dimensions)

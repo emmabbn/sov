@@ -19,6 +19,7 @@
 #' @returns A list with data frames containing ideal points, vs-SOVs for each voter, number of pivots, name of pivot(s) for each roll call, and normal vectors and angles for each roll call.
 #' @export
 #'
+#'
 vs_sov <- function(
     estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.
     weight_nom		= FALSE,	# If TRUE use weights estimated from wnom output, if FALSE use vector of 1's. ... For wnom only.
