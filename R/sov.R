@@ -1,8 +1,11 @@
 ########## TRADITIONAL SOV FUNCTION ##########
 # external function.  			sov() calculates traditional shapley owen values from package estimated inputs.
-#' sov
+##########################################
+#' Traditional Shapley-Owen Values
 #'
-#' @param estimates Estimation results from oc, wnom, or mcmcPack.
+#' This function calculates traditional Shapley-Owen values (SOVs) from package estimated inputs.
+#'
+#' @param estimates Estimation results from oc, wnom, or MCMCpack.
 #' @param av Attendance vector coded attend=1, "not attend"=NA.
 #' @param weight_nom If TRUE use weights estimated from wnom output, if FALSE use vector of 1's. ... For wnom only.
 #' @param absolute If TRUE, q is a scalar of yeas needed to pass proposal.  If FALSE, pr is the proportion of yeas need to pass a proposal among voters attending.
@@ -15,12 +18,12 @@
 #' @param out_dir The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
 #' @param print_results If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 #'
-#' @returns calculates traditional shapley owen values from package estimated inputs.
+#' @returns A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
 #' @export
 #'
 #' @examples
 sov <- function(
-    estimates		= NULL,		# Estimation results from oc, wnom, or mcmcPack.
+    estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.
     av				= NULL,		# Attendance vector coded attend=1, "not attend"=NA.
     weight_nom 		= FALSE,	# If TRUE use weights estimated from wnom output, if FALSE use vector of 1's. ... For wnom only.
     absolute   		= FALSE,	# If TRUE, q is a scalar of yeas needed to pass proposal.  If FALSE, pr is the proportion of yeas need to pass a proposal among voters attending.

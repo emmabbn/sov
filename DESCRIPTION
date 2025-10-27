@@ -2,8 +2,9 @@ Package: sov
 Title: calculate vs-SOVs for Assemblies with Weighted Voting, Various Voting Thresholds, and Different Numbers of Dimensions
 Version: 0.0.0.9000
 Authors@R: c(
-    person("Keith", "Dougherty", "dougherk@uga.edu", role = c("aut", "cre")),
-    person("Emma", "Bibina", "emma.bibina@uga.edu", role = c("aut", "cre")))
+    person("Keith", "Dougherty", email = "dougherk@uga.edu", role = c("aut", "cre")),
+    person("Emma", "Bibina", email = "emma.bibina@uga.edu", role = "aut")
+    )
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
