@@ -50,3 +50,46 @@ A list with data frames containing ideal points, number of pivots, name of pivot
 \description{
 This function calculates traditional Shapley-Owen values (SOVs) from data provided by the user.
 }
+\examples{
+
+# Traditional SOVs in 2D
+# Note: You supply only ideal points and an attendance vector (i.e., who is
+# always present), not roll-call votes.
+
+# Ideals: 5 voters in 2D
+i1 <- c( 0.7,  0.7)
+i2 <- c(-0.5,  0.5)
+i3 <- c(-0.7, -0.7)
+i4 <- c( 0.5, -0.5)
+i5 <- c( 0.0,  0.0)
+ideals <- rbind(i1, i2, i3, i4, i5)
+rownames(ideals) <- paste0("i", 1:5)
+colnames(ideals) <- c("coord1D","coord2D")
+
+# Attendance: 1 = included, NA = excluded
+# Example: exclude i5 from the analysis
+av <- c(1, 1, 1, 1, NA)
+
+## --- Equal voting weights ---------------------------------------------------
+vw <- rep(1, nrow(ideals))
+
+## --- Traditional SOV (simple majority among the four voters included) ------
+out_sov <- sov_user(
+  ideals   = ideals,
+  av       = av,
+  absolute = FALSE,   # simple k-majority among included voters
+  pr       = 0.5001,
+  vw       = vw,
+  nPoints1 = 72,      # 360 degrees divided into 72 equal sized increments
+  nPoints2 = 72,
+  dec      = 3
+)
+
+# aggregate results by member
+out_sov$pivot_summary
+# Directions examined (normals) and pivot names by direction:
+out_sov$pivot_by_angle
+
+# Tip: switch to an absolute quota by setting absolute = TRUE and q = 3
+# (for example) to require 3 yeas regardless of who's included in av.
+}

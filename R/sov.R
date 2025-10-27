@@ -21,7 +21,6 @@
 #' @returns A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
 #' @export
 #'
-#' @examples
 sov <- function(
     estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.
     av				= NULL,		# Attendance vector coded attend=1, "not attend"=NA.

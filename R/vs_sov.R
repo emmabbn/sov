@@ -19,6 +19,96 @@
 #' @returns A list with data frames containing ideal points, vs-SOVs for each voter, number of pivots, name of pivot(s) for each roll call, and normal vectors and angles for each roll call.
 #' @export
 #'
+#' @examples
+#' # VS-SOVs in 2D using W-NOMINATE OUTPUT
+#' # vs_sov() needs an "estimates" object from OC, WNOMINATE, or MCMCpack.
+#' # Below is a minimal WNOMINATE-like object built from 2D ideals
+#' # and three roll calls.
+#'
+#' # Ideals: 5 voters in 2D
+#' i1 <- c( 0.7,  0.7)
+#' i2 <- c(-0.5,  0.5)
+#' i3 <- c(-0.7, -0.7)
+#' i4 <- c( 0.5, -0.5)
+#' i5 <- c( 0.0,  0.0)
+#' ideals <- rbind(i1, i2, i3, i4, i5)
+#' rownames(ideals) <- paste0("i", 1:5)
+#' colnames(ideals) <- c("coord1D","coord2D")
+#'
+#' # Fabricate a minimal WNOM-like object called estimates
+#' # Spreads pick the normal directions; midpoints place the cutplane.
+#' spreads <- rbind(
+#'   c( 1,  0),  # RC1: normal along +x
+#'   c( 0,  1),  # RC2: normal along +y
+#'   c(-1,  0)   # RC3: normal along -x
+#' )
+#' midpoints <- rbind(
+#'   c( 0.10,  0.00),  # RC1 cut near the origin on x
+#'   c( 0.00, -0.10),  # RC2 cut slightly below origin on y
+#'   c( 0.05,  0.00)   # RC3 cut near the origin on x
+#' )
+#' rownames(spreads)  <- rownames(midpoints) <- paste0("RC", 1:3)
+#'
+#' # Legislators must include coord1D/coord2D plus GMP and CC fields.
+#' # These help the function identify the type of estimate.
+#' leg <- data.frame(
+#'   coord1D = ideals[, 1],
+#'   coord2D = ideals[, 2],
+#'   GMP = 0.5,
+#'   CC  = 0.5,
+#'   row.names = rownames(ideals),
+#'   check.names = FALSE
+#' )
+#'
+#' # Roll calls must include GMP and the WNOM fields midpoint\*D and spread\*D.
+#' rc <- data.frame(
+#'   GMP = rep(0.5, nrow(midpoints)),
+#'   midpoint1D = midpoints[, 1],
+#'   midpoint2D = midpoints[, 2],
+#'   spread1D   = spreads[, 1],
+#'   spread2D   = spreads[, 2],
+#'   row.names  = rownames(midpoints),
+#'   check.names = FALSE
+#' )
+#'
+#' # Dimensional weights (first must be 1); here both dimensions are equal.
+#' weights <- c(1, 1)
+#'
+#' # Minimal WNOM-like object
+#' estimates <- list(
+#'   legislators = leg,
+#'   rollcalls   = rc,
+#'   weights     = weights
+#' )
+#' class(estimates) <- "nomObject"  # not required, but reasonable
+#'
+#' # Votes: 1=yea, 0=nay, 9=attend-no-vote, NA=absent
+#' votes <- cbind(
+#'   RC1 = c(1, 0, 0, 1, 9),  # include one '9' to illustrate attendance w/o voting
+#'   RC2 = c(1, 1, 0, 0, 0),
+#'   RC3 = c(0, 1, 1, 0, 0)
+#' )
+#' rownames(votes) <- rownames(ideals)
+#'
+#' # Equal voting weights
+#' vw <- rep(1, nrow(ideals))
+#'
+#' # VS-SOV from WNOM-like estimates (simple majority among attendees)
+#' out_vs <- vs_sov(
+#'   estimates = estimates,
+#'   votes     = votes,
+#'   absolute  = FALSE,  # simple k-majority
+#'   pr        = 0.5001,
+#'   vw        = vw,
+#'   dec       = 3
+#' )
+#'
+#' # aggregate results by member
+#' out_vs$pivot_summary
+#' # Pivot names by roll call:
+#' out_vs$pivot_by_rc
+#' # Normals and angles (derived from spreads & midpoints):
+#' out_vs$nv_and_angles
 #'
 vs_sov <- function(
     estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.
