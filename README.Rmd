@@ -20,6 +20,16 @@ knitr::opts_chunk$set(
 
 The R package `sov` calculates vote-specific Shapley-Owen values (vs-SOVs) for assemblies with weighted voting, various voting thresholds, and different numbers of dimensions.
 
+## Description
+
+This program calculates VS-SOVs and traditional SOVs in multidimensional space.  
+
+- VS-SOVs utilize the "observed" normal vectors and their reflections to determine the proportion of times a voter pivots.  
+- Traditional SOVs utilize all angles of the vote from 0 to 360 degrees for each dimension greater than 1.  
+- The package should work for 1 to 4 dimensions, weighted voting, and various voting thresholds.  
+
+Separate functions are used for package-estimated inputs and user-provided inputs.
+
 ## Installation
 
 You can install the development version of sov from [GitHub](https://github.com/) with:
