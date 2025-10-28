@@ -13,11 +13,11 @@ thresholds, and different numbers of dimensions.
 
 ## Description
 
-This program calculates VS-SOVs and traditional SOVs in multidimensional
+This program calculates vs-SOVs and traditional SOVs in multidimensional
 space.
 
-- VS-SOVs utilize the “observed” normal vectors and their reflections to
-  determine the proportion of times a voter pivots.  
+- vs-SOVs utilize the ‘’observed’’ normal vectors and their reflections
+  to determine the proportion of times a voter pivots.  
 - Traditional SOVs utilize all angles of the vote from 0 to 360 degrees
   for each dimension greater than 1.  
 - The package should work for 1 to 4 dimensions, weighted voting, and
@@ -36,35 +36,264 @@ You can install the development version of sov from
 pak::pak("emmabbn/sov")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
+## Examples
 
 ``` r
 library(sov)
-## basic example code
+
+library(SOV)
+
+##### ##### 1D Example.  Start with Inputs ##### #####
+## --- Ideals: 3 voters in 1D -----------------------------------------------
+i1 <-  0.7
+i2 <-  0.0
+i3 <- -0.7
+ideals <- cbind(coord1D = c(i1, i2, i3))
+rownames(ideals) <- paste0("i", 1:3)
+
+## --- Normals: 2 roll calls (x+, x-) ---------------------------------------
+nv1 <-  1   # points to the right
+nv2 <- -1   # points to the left
+normals <- cbind(dim1 = c(nv1, nv2))
+rownames(normals) <- paste0("RC", 1:2)
+
+## --- Votes: 1=yea, 0=nay, 9=attend-no-vote, NA=absent ---------------------
+## (For simple-majority thresholds, only 0/1 count towards the quota.)
+votes <- cbind(
+  RC1 = c(1, 0, 0),   # i1 yea, i2 nay, i3 nay
+  RC2 = c(0, 1, 1)    # i1 nay, i2 yea, i3 yea
+)
+rownames(votes) <- rownames(ideals)
+
+## --- Equal voting weights --------------------------------------------------
+vw <- rep(1, nrow(ideals))
+
+##### EX1: Vote-specific SOV (simple majority among attendees in 1D) #####
+out_simple <- vs_sov_user(
+  ideals   = ideals,
+  normals  = normals,
+  votes    = votes,
+  absolute = FALSE,    # simple k-majority
+  pr       = 0.5001,   # strict majority of attendees
+  vw       = vw,
+  dec      = 3
+)
+
+# aggregate results by member
+out_simple$pivot_summary
+# pivot name(s) by roll call:
+out_simple$pivot_by_rc
+# normal vectors and corresponding angles:
+out_simple$nv_and_angles
+
+##### ##### 2D Examples.  Start with Inputs ##### #####
+## --- Ideals: 5 voters in 2D -----------------------------------------------
+i1 <- c( 0.7,  0.7)
+i2 <- c(-0.5,  0.5)
+i3 <- c(-0.7, -0.7)
+i4 <- c( 0.5, -0.5)
+i5 <- c( 0.0,  0.0)
+ideals <- rbind(i1, i2, i3, i4, i5)
+rownames(ideals) <- paste0("i", 1:5)
+colnames(ideals) <- c("coord1D","coord2D")
+
+## --- Normals: 3 roll calls (x+, y+, x-) -----------------------------------
+nv1 <- c( 1, 0)
+nv2 <- c( 0, 1)
+nv3 <- c(-1, 0)
+normals <- rbind(nv1, nv2, nv3)
+rownames(normals) <- paste0("RC", 1:3)
+
+## --- Votes: 1=yea, 0=nay, 9=attend but did not vote --------------
+## For simple k-majority, only 0/1 determine the k-majority threshold; 9/NA are not counted toward that threshold.
+votes <- cbind(
+  RC1 = c(1,0,0,1,9),       # 9 indicates attend but did not vote
+  RC2 = c(1,1,0,0,0),
+  RC3 = c(0,1,1,0,0)
+)
+rownames(votes) <- rownames(ideals)
+
+## --- Equal voting weights ---------------------------------------------------
+vw <- rep(1, nrow(ideals))
+
+
+##### EX2: Simple majority example -- 50% + e among those attending required for passage in 2D #####
+out_simple <- vs_sov_user(
+  ideals   = ideals,
+  normals  = normals,   # or use `midpoints = ...` if you prefer
+  votes    = votes,
+  absolute = FALSE,     # simple k-majority
+  pr       = 0.5001,        # strict majority of attendees
+  vw       = vw,
+  dec      = 3
+)
+
+# aggregate results by member
+out_simple$pivot_summary
+# Per-roll-call pivot names:
+out_simple$pivot_by_rc
+# Normals + angles (degrees/radians) used for each roll call:
+out_simple$nv_and_angles
+
+##### EX3: Using midpoints instead of normals in 2D #####
+## --- Midpoints corresponding to the normals above -------------------------
+# Each row is where a cutplane intersects the normal vector
+mid1 <- c( 0.1,  0.0)   # RC1
+mid2 <- c( 0.0,  0.1)   # RC2
+mid3 <- c(-0.1,  0.0)   # RC3
+midpoints <- rbind(mid1, mid2, mid3)
+rownames(midpoints) <- paste0("RC", 1:3)
+colnames(midpoints) <- c("coord1D","coord2D")
+
+out_simple_mid <- vs_sov_user(
+  ideals   = ideals,
+  midpoints = midpoints,        # <- used in place of normals
+  votes    = votes,
+  absolute = FALSE,
+  pr       = 0.5001,
+  vw       = vw,
+  dec      = 3
+)
+
+out_simple_mid$pivot_summary
+out_simple_mid$pivot_by_rc
+out_simple_mid$nv_and_angles
+
+
+##### EX4: Supermajority (4/5ths) absolute example in 2D #####
+# For an absolute rule, set absolute = TRUE and pass an explicit quota q.
+out_4of5 <- vs_sov_user(
+  ideals   = ideals,
+  normals  = normals,
+  votes    = votes,
+  absolute = TRUE,  # absolute k-majority
+  q        = 4,             # 4 of 5
+  vw       = vw,
+  dec      = 3
+)
+
+out_4of5$pivot_summary
+out_4of5$pivot_by_rc
+
+##### EX5: Traditional SOVs in 2D #####
+# Note: You supply only ideal points and an attendance vector (i.e., who is always present), not roll-call votes.
+
+## --- Attendance: 1 = included, NA = excluded -------------------------------
+## Example: exclude i5 from the analysis
+av <- c(1, 1, 1, 1, NA)
+
+## --- Equal voting weights ---------------------------------------------------
+vw <- rep(1, nrow(ideals))
+
+## --- Traditional SOV (simple majority among the four voters included) ------
+out_sov <- sov_user(
+  ideals   = ideals,
+  av       = av,
+  absolute = FALSE,     # simple k-majority among included voters
+  pr       = 0.5001,
+  vw       = vw,
+  nPoints1 = 72,        # 360 degrees divided into 72 equal sized increments
+  nPoints2 = 72,
+  dec      = 3
+)
+
+# aggregate results by member
+out_sov$pivot_summary
+# Directions examined (normals) and pivot names by direction:
+out_sov$pivot_by_angle
+
+# Tip: switch to an absolute quota by setting absolute = TRUE and q = 3 (for example) to require 3 yeas regardless of who's included in av.
+
+##### EX6: VS-SOVs in 2D using W-NOMINATE OUTPUT #####
+# vs_sov() needs an "estimates" object from OC, WNOMINATE, or MCMCpack. Below is a tiny WNOMINATE-like object built from the same 2-D ideals and three roll calls as the previous examples.
+
+## --- Fabricate a minimal W-NOM like object called estimates -----------------------
+## Spreads pick the normal directions; midpoints place the cutplane.
+spreads <- rbind(
+  c( 1,  0),  # RC1: normal along +x
+  c( 0,  1),  # RC2: normal along +y
+  c(-1,  0)   # RC3: normal along -x
+)
+midpoints <- rbind(
+  c( 0.10,  0.00),  # RC1 cut near the origin on x
+  c( 0.00, -0.10),  # RC2 cut slightly below origin on y
+  c( 0.05,  0.00)   # RC3 cut near the origin on x
+)
+rownames(spreads)  <- rownames(midpoints) <- paste0("RC", 1:3)
+
+## Legislators must include coord1D/coord2D plus GMP and CC.  The latter helps the function identify the type of estimate.
+# ideals from above
+leg <- data.frame(
+  coord1D = ideals[, 1],
+  coord2D = ideals[, 2],
+  GMP = 0.5,
+  CC  = 0.5,
+  row.names = rownames(ideals),
+  check.names = FALSE
+)
+
+## Rollcalls must include GMP and the WNOM fields midpoint*D and spread*D.
+rc <- data.frame(
+  GMP = rep(0.5, nrow(midpoints)),
+  midpoint1D = midpoints[, 1],
+  midpoint2D = midpoints[, 2],
+  spread1D   = spreads[, 1],
+  spread2D   = spreads[, 2],
+  row.names  = rownames(midpoints),
+  check.names = FALSE
+)
+
+## Dimensional weights (first must be 1); here we weight both dimensions equally.
+weights <- c(1, 1)
+
+## Minimal WNOM-like object
+estimates <- list(legislators = leg, rollcalls = rc, weights = weights)
+class(estimates) <- "nomObject"  # not strictly required by SOV, but reasonable
+
+## --- Votes: 1=yea, 0=nay, 9=attend-no-vote, NA=absent ----------------------
+votes <- cbind(
+  RC1 = c(1, 0, 0, 1, 9),  # include one '9' to illustrate attendance w/o voting
+  RC2 = c(1, 1, 0, 0, 0),
+  RC3 = c(0, 1, 1, 0, 0)
+)
+rownames(votes) <- rownames(ideals)
+
+## --- Equal voting weights ---------------------------------------------------
+vw <- rep(1, nrow(ideals))
+
+## --- VS-SOV from WNOM-like estimates (simple majority among attendees) -----
+out_vs <- vs_sov(
+  estimates = estimates,
+  votes     = votes,
+  absolute  = FALSE,  # simple k-majority
+  pr        = 0.5001,
+  vw        = vw,
+  dec       = 3
+)
+
+# aggregate results by member
+out_vs$pivot_summary
+# Pivot names by roll call:
+out_vs$pivot_by_rc
+# Normals and angles (derived from spreads & midpoints):
+out_vs$nv_and_angles
+
+###### What the outputs mean
+    # pivot_summary: one row per voter with the number of roll-calls where they pivot and their VS-SOV or SOV, respectively.
+    # pivot_by_rc: pivot name(s) for each roll call (ties show multiple columns).
+    # nv_and_angles: the normal vector per roll call plus angles (useful for diagnostics/export).
+
+##### Excel export (optional) #####
+vs_sov_user(
+  ideals, normals, votes,
+  absolute      = FALSE, pr = 0.5001, vw = vw,
+  print_results = TRUE,           # writes an .xlsx workbook
+  out_dir       = "output"         # include a path to your output directory. If missing, a path will be created to a subfolder called "output."
+)
+
+###### Tips ...
+###### The function will derive unit normals, rescale if needed, and auto-correct polarity based on the votes.
+###### Normals vs. Midpoints: provide one or the other, not both. With midpoints, the code infers the normal vector and utilizes distance of the midpoint to the origin.
+###### Scaling: If your ideals/midpoints are outside the unit circle, the function rescales them consistently?no extra work needed.
+###### Votes: Keep at least one 1 and one 0 per dataset (overall), and feel free to include a 9 to show ?attended but didn?t vote?; it?s very instructive.
 ```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
