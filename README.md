@@ -41,8 +41,6 @@ pak::pak("emmabbn/sov")
 ``` r
 library(sov)
 
-library(SOV)
-
 ##### ##### 1D Example.  Start with Inputs ##### #####
 ## --- Ideals: 3 voters in 1D -----------------------------------------------
 i1 <-  0.7
@@ -294,6 +292,6 @@ vs_sov_user(
 ###### Tips ...
 ###### The function will derive unit normals, rescale if needed, and auto-correct polarity based on the votes.
 ###### Normals vs. Midpoints: provide one or the other, not both. With midpoints, the code infers the normal vector and utilizes distance of the midpoint to the origin.
-###### Scaling: If your ideals/midpoints are outside the unit circle, the function rescales them consistently?no extra work needed.
-###### Votes: Keep at least one 1 and one 0 per dataset (overall), and feel free to include a 9 to show ?attended but didn?t vote?; it?s very instructive.
+###### Scaling: If your ideals/midpoints are outside the unit circle, the function rescales them consistently, no extra work needed.
+###### Votes: Keep at least one 1 and one 0 per dataset (overall), and feel free to include a 9 to show ''attended but didn't vote''; it's very instructive.
 ```
