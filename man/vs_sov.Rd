@@ -50,7 +50,7 @@ This function calculates vote-specific Shapley-Owen values (vs-SOVs) from packag
 # Below is a minimal WNOMINATE-like object built from 2D ideals
 # and three roll calls.
 
-## --- Ideals: 5 voters in 2D -----------------------------------------------
+# Ideals: 5 voters in 2D
 i1 <- c( 0.7,  0.7)
 i2 <- c(-0.5,  0.5)
 i3 <- c(-0.7, -0.7)
@@ -60,8 +60,8 @@ ideals <- rbind(i1, i2, i3, i4, i5)
 rownames(ideals) <- paste0("i", 1:5)
 colnames(ideals) <- c("coord1D","coord2D")
 
-## --- Fabricate a minimal WNOM-like object called estimates -----------------
-## Spreads pick the normal directions; midpoints place the cutplane.
+# Fabricate a minimal WNOM-like object called estimates
+# Spreads pick the normal directions; midpoints place the cutplane.
 spreads <- rbind(
   c( 1,  0),  # RC1: normal along +x
   c( 0,  1),  # RC2: normal along +y

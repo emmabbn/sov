@@ -1,11 +1,11 @@
 Package: sov
-Title: calculate vs-SOVs for Assemblies with Weighted Voting, Various Voting Thresholds, and Different Numbers of Dimensions
+Title: Calculate vs-SOVs and SOVs for Assemblies with Weighted Voting, Various Voting Thresholds, and D-Dimensional Voting
 Version: 0.0.0.9000
 Authors@R: c(
     person("Keith", "Dougherty", email = "dougherk@uga.edu", role = c("aut", "cre")),
     person("Emma", "Bibina", email = "emma.bibina@uga.edu", role = "aut")
     )
-Description: What the package does (one paragraph).
+Description: Computes vote-specific Shapley-Owen Values (vs-SOVs) that can be applied to various voting thresholds, weighted voting, and bloc voting. Vs-SOVs also can be applied to subsets of votes, such as issue categories, and they allow for the examination of counterfactuals. Provides functions to estimate vs-SOVs and SOVs from package estimated inputs and from user provided data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
