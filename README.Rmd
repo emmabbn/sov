@@ -32,7 +32,7 @@ Separate functions are used for package-estimated inputs and user-provided input
 
 ## Installation
 
-You can install the development version of sov from [GitHub](https://github.com/) with:
+You can install the development version of `sov` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")

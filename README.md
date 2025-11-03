@@ -28,7 +28,7 @@ user-provided inputs.
 
 ## Installation
 
-You can install the development version of sov from
+You can install the development version of `sov` from
 [GitHub](https://github.com/) with:
 
 ``` r
