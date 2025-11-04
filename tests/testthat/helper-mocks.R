@@ -1,4 +1,4 @@
-# tests/testthat/helpers-mocks.R
+# tests/testthat/helper-mocks.R
 
 # Resolve project root both under testthat::test_dir() and plain source()
 .get_proj_root <- function() {
@@ -27,11 +27,12 @@
 
 PROJ_ROOT <- .get_proj_root()
 
+# KD: suggested removal
 # IMPORTANT: Do NOT re-source under coverage, or you’ll wipe covr’s instrumentation.
 # Sys.getenv() returns a string; compare to the literal "true".
-#if (Sys.getenv("R_COVR") != "true") {
+# if (Sys.getenv("R_COVR") != "true") {
 #  source(file.path(PROJ_ROOT, "SOV_functions.R"), encoding = "UTF-8")
-#}
+# }
 
 
 # --- Shared tiny 1D ideals & names ---

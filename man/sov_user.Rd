@@ -90,6 +90,7 @@ out_sov$pivot_summary
 # Directions examined (normals) and pivot names by direction:
 out_sov$pivot_by_angle
 
-# Tip: switch to an absolute quota by setting absolute = TRUE and q = 3
-# (for example) to require 3 yeas regardless of who's included in av.
+--- Plot (2D): label with SOVs (no normals needed) -------------------------
+sov_labels <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
+plot_sov_geometry(ideals, label_values = sov_labels, digits = 3)
 }

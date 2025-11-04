@@ -194,8 +194,7 @@ test_that("infeasible q triggers warning and reset", {
       q         = 5,     # larger than total weight 3
       vw        = vw_3()
     ),
-    regexp = "reset|greater than the sum of the weighted votes",
-    all = FALSE
+    regexp = "reset|greater than the sum of the weighted votes"
   )
 })
 

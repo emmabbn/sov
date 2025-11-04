@@ -135,4 +135,9 @@ out_vs$pivot_by_rc
 # Normals and angles (derived from spreads & midpoints):
 out_vs$nv_and_angles
 
+# --- Plot (2D): one figure with ALL normals derived from 'spreads' ----------
+vs_labels_est <- setNames(out_vs$pivot_summary$vs_sov, out_vs$pivot_summary$name)
+normals_est <- as.matrix(spreads)
+normals_est <- normals_est / sqrt(rowSums(normals_est^2))
+plot_sov_geometry(ideals, normals = normals_est, label_values = vs_labels_est, digits = 3)
 }

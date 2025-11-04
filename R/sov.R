@@ -21,6 +21,68 @@
 #' @returns A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
 #' @export
 #'
+#' @examples
+#'
+#' ## --- Ideals: 5 voters in 2D -----------------------------------------------
+#'i1 <- c( 0.7,  0.7)
+#'i2 <- c(-0.5,  0.5)
+#'i3 <- c(-0.7, -0.7)
+#'i4 <- c( 0.5, -0.5)
+#'i5 <- c( 0.0,  0.0)
+#'ideals <- rbind(i1, i2, i3, i4, i5)
+#'rownames(ideals) <- paste0("i", 1:5)
+#'colnames(ideals) <- c("coord1D","coord2D")
+#'
+#'# Build a minimal WNOM-like 'estimates' object for sov() identification
+#'spreads <- rbind(c( 1,  0), c( 0,  1), c(-1,  0))
+#'midpoints <- rbind(c( 0.10,  0.00), c( 0.00, -0.10), c( 0.05,  0.00))
+#'rownames(spreads)  <- rownames(midpoints) <- paste0("RC", 1:3)
+#'colnames(spreads)  <- colnames(midpoints) <- c("dim1","dim2")
+#'
+#'leg <- data.frame(
+#'  coord1D   = ideals[, 1],
+#'  coord2D   = ideals[, 2],
+#'  GMP       = 0.5,
+#'  CC        = 0.5,
+#'  row.names = rownames(ideals),
+#'  check.names = FALSE
+#')
+#' rc <- data.frame(
+#'  GMP = rep(0.5, nrow(midpoints)),
+#'  midpoint1D = midpoints[, 1],
+#'  midpoint2D = midpoints[, 2],
+#'  spread1D   = spreads[, 1],
+#'  spread2D   = spreads[, 2],
+#'  row.names  = rownames(midpoints),
+#'  check.names = FALSE
+#')
+#'weights <- c(1, 1)
+#'estimates <- list(legislators = leg, rollcalls = rc, weights = weights)
+#'class(estimates) <- "nomObject"
+#'
+#'# Attendance: exclude i5
+#'av <- c(1, 1, 1, 1, NA); names(av) <- rownames(ideals)
+#'vw <- rep(1, nrow(ideals))
+#'
+#'out_sov <- sov(
+#'  estimates     = estimates,
+#'  av            = av,
+#'  absolute      = FALSE,
+#'  pr            = 0.5001,
+#'  vw            = vw,
+#'  nPoints1      = 72,
+#'  nPoints2      = 72,
+#'  dec           = 3,
+#'  print_results = FALSE
+#')
+#'
+#'out_sov$pivot_summary
+#'out_sov$pivot_by_angle
+#'
+#'# --- Plot (2D): label with SOVs (no normals needed here) --------------------
+#'sov_labels2d <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
+#'plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
+
 sov <- function(
     estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.
     av				= NULL,		# Attendance vector coded attend=1, "not attend"=NA.

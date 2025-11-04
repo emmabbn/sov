@@ -1,4 +1,5 @@
-context("Branch & validation coverage + writers")
+# following line is potentially outdated
+# context("Branch & validation coverage + writers")
 
 ## --- identify(): oc / wnom / mcmc / dk --------------------------------------
 

@@ -51,30 +51,33 @@ A list with data frames containing ideal points, vs-SOVs for each voter, number 
 This function calculates vote-specific Shapley-Owen Values (vs-SOVs) from data provided by the user.
 }
 \examples{
-# 1D Example.  Start with Inputs
-# Ideals: 3 voters in 1D
-  i1 <-  0.7
-  i2 <-  0.0
-  i3 <- -0.7
-  ideals <- cbind(coord1D = c(i1, i2, i3))
-  rownames(ideals) <- paste0("i", 1:3)
-# Normals: 2 roll calls (x+, x-)
-  nv1 <-  1   # points to the right
-  nv2 <- -1   # points to the left
-  normals <- cbind(dim1 = c(nv1, nv2))
-  rownames(normals) <- paste0("RC", 1:2)
- # Votes: 1=yea, 0=nay, 9=attend-no-vote, NA=absent
- # For simple-majority thresholds, only 0/1 count towards the quota.
-  votes <- cbind(
-     RC1 = c(1, 0, 0),   # i1 yea, i2 nay, i3 nay
-     RC2 = c(0, 1, 1)    # i1 nay, i2 yea, i3 yea
-                 )
-  rownames(votes) <- rownames(ideals)
- # Equal voting weights
-  vw <- rep(1, nrow(ideals))
+#############################################################################
+##### ##### 1D Example.  Start with Inputs ##### #####
+## --- Ideals: 3 voters in 1D -----------------------------------------------
+i1 <-  0.7
+i2 <-  0.0
+i3 <- -0.7
+ideals <- cbind(coord1D = c(i1, i2, i3))
+rownames(ideals) <- paste0("i", 1:3)
 
- # Vote-specific SOV (simple majority among attendees in 1D)
-  out_simple <- vs_sov_user(
+## --- Normals: 2 roll calls (x+, x-) ---------------------------------------
+nv1 <-  1   # points to the right
+nv2 <- -1   # points to the left
+normals <- cbind(dim1 = c(nv1, nv2))
+rownames(normals) <- paste0("RC", 1:2)
+
+## --- Votes: 1=yea, 0=nay, 9=attend-no-vote, NA=absent ---------------------
+votes <- cbind(
+  RC1 = c(1, 0, 0),   # i1 yea, i2 nay, i3 nay
+  RC2 = c(0, 1, 1)    # i1 nay, i2 yea, i3 yea
+)
+rownames(votes) <- rownames(ideals)
+
+## --- Equal voting weights --------------------------------------------------
+vw <- rep(1, nrow(ideals))
+
+##### EX1: Vote-specific SOV (simple majority among attendees in 1D) #####
+out_simple <- vs_sov_user(
   ideals   = ideals,
   normals  = normals,
   votes    = votes,
@@ -82,19 +85,20 @@ This function calculates vote-specific Shapley-Owen Values (vs-SOVs) from data p
   pr       = 0.5001,   # strict majority of attendees
   vw       = vw,
   dec      = 3
- )
+)
 
-# aggregate results by member
-  out_simple$pivot_summary
+# Aggregate results
+out_simple$pivot_summary
+out_simple$pivot_by_rc
+out_simple$nv_and_angles
 
-# pivot name(s) by roll call:
-  out_simple$pivot_by_rc
+# --- Plot (1D): one figure with ALL roll calls overlaid ---------------------
+vs_labels <- setNames(out_simple$pivot_summary$vs_sov, out_simple$pivot_summary$name)
+plot_sov_geometry(ideals, normals = normals, label_values = vs_labels, digits = 3)
 
-# normal vectors and corresponding angles:
-  out_simple$nv_and_angles
-
-# 2D Examples.  Start with Inputs
-# Ideals: 5 voters in 2D
+#############################################################################
+##### ##### 2D Examples.  Start with Inputs ##### #####
+## --- Ideals: 5 voters in 2D -----------------------------------------------
 i1 <- c( 0.7,  0.7)
 i2 <- c(-0.5,  0.5)
 i3 <- c(-0.7, -0.7)
@@ -104,45 +108,45 @@ ideals <- rbind(i1, i2, i3, i4, i5)
 rownames(ideals) <- paste0("i", 1:5)
 colnames(ideals) <- c("coord1D","coord2D")
 
-# Normals: 3 roll calls (x+, y+, x-)
+## --- Normals: 3 roll calls (x+, y+, x-) -----------------------------------
 nv1 <- c( 1, 0)
 nv2 <- c( 0, 1)
 nv3 <- c(-1, 0)
 normals <- rbind(nv1, nv2, nv3)
 rownames(normals) <- paste0("RC", 1:3)
 
-# Votes: 1=yea, 0=nay, 9=attend but did not vote
-# For simple k-majority, only 0/1 determine the threshold; 9/NA are excluded.
+## --- Votes: 1=yea, 0=nay, 9=attend but did not vote -----------------------
 votes <- cbind(
-  RC1 = c(1, 0, 0, 1, 9),  # 9 = attended but did not vote
-  RC2 = c(1, 1, 0, 0, 0),
-  RC3 = c(0, 1, 1, 0, 0)
+  RC1 = c(1,0,0,1,9),
+  RC2 = c(1,1,0,0,0),
+  RC3 = c(0,1,1,0,0)
 )
 rownames(votes) <- rownames(ideals)
 
-#Equal voting weights
+## --- Equal voting weights ---------------------------------------------------
 vw <- rep(1, nrow(ideals))
 
-# EX2: Simple majority (50\% + e) among attendees in 2D
+##### EX2: Simple majority (2D) -- 50\% + ε among attendees #####
 out_simple <- vs_sov_user(
   ideals   = ideals,
-  normals  = normals,   # or use `midpoints = ...` if you prefer
+  normals  = normals,
   votes    = votes,
-  absolute = FALSE,     # simple k-majority
-  pr       = 0.5001,    # strict majority of attendees
+  absolute = FALSE,
+  pr       = 0.5001,
   vw       = vw,
   dec      = 3
 )
-# aggregate results by member
+
 out_simple$pivot_summary
-# Per-roll-call pivot names:
 out_simple$pivot_by_rc
-# Normals + angles (degrees/radians) used for each roll call:
 out_simple$nv_and_angles
 
-# EX3: Using midpoints instead of normals in 2D
-# Midpoints corresponding to the normals above
-# Each row is where a cutplane intersects the normal vector
+# --- Plot (2D): one figure with ALL normals overlaid ------------------------
+vs_labels2d <- setNames(out_simple$pivot_summary$vs_sov, out_simple$pivot_summary$name)
+plot_sov_geometry(ideals, normals = normals, label_values = vs_labels2d, digits = 3)
+
+#############################################################################
+##### EX3: Using midpoints instead of normals in 2D #####
 mid1 <- c( 0.1,  0.0)   # RC1
 mid2 <- c( 0.0,  0.1)   # RC2
 mid3 <- c(-0.1,  0.0)   # RC3
@@ -159,21 +163,31 @@ out_simple_mid <- vs_sov_user(
   vw        = vw,
   dec       = 3
 )
+
 out_simple_mid$pivot_summary
 out_simple_mid$pivot_by_rc
 out_simple_mid$nv_and_angles
 
-# EX4: Supermajority (4/5) absolute example in 2D
-# For an absolute rule, set absolute = TRUE and pass an explicit quota q.
+# --- Plot (2D): one figure with ALL cut chords from midpoints ---------------
+vs_labels_mid <- setNames(out_simple_mid$pivot_summary$vs_sov, out_simple_mid$pivot_summary$name)
+plot_sov_geometry(ideals, midpoints = midpoints, label_values = vs_labels_mid, digits = 3)
+
+#############################################################################
+##### EX4: Supermajority (4/5ths) absolute example in 2D #####
 out_4of5 <- vs_sov_user(
   ideals   = ideals,
   normals  = normals,
   votes    = votes,
-  absolute = TRUE,   # absolute k-majority
+  absolute = TRUE,
   q        = 4,      # 4 of 5
   vw       = vw,
   dec      = 3
 )
+
 out_4of5$pivot_summary
 out_4of5$pivot_by_rc
+
+# --- Plot (2D): one figure with ALL normals; VS-SOV labels for 4/5 ----------
+vs_labels_4of5 <- setNames(out_4of5$pivot_summary$vs_sov, out_4of5$pivot_summary$name)
+plot_sov_geometry(ideals, normals = normals, label_values = vs_labels_4of5, digits = 3)
 }
