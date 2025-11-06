@@ -63,9 +63,6 @@
 #' out_simple$pivot_by_rc
 #' out_simple$nv_and_angles
 #'
-#' # --- Plot (1D): one figure with ALL roll calls overlaid ---------------------
-#' vs_labels <- setNames(out_simple$pivot_summary$vs_sov, out_simple$pivot_summary$name)
-#' plot_sov_geometry(ideals, normals = normals, label_values = vs_labels, digits = 3)
 #'
 #' #############################################################################
 #' ##### ##### 2D Examples.  Start with Inputs ##### #####
@@ -112,55 +109,11 @@
 #' out_simple$pivot_by_rc
 #' out_simple$nv_and_angles
 #'
-#' # --- Plot (2D): one figure with ALL normals overlaid ------------------------
-#' vs_labels2d <- setNames(out_simple$pivot_summary$vs_sov, out_simple$pivot_summary$name)
-#' plot_sov_geometry(ideals, normals = normals, label_values = vs_labels2d, digits = 3)
-#'
-#' #############################################################################
-#' ##### EX3: Using midpoints instead of normals in 2D #####
-#' mid1 <- c( 0.1,  0.0)   # RC1
-#' mid2 <- c( 0.0,  0.1)   # RC2
-#' mid3 <- c(-0.1,  0.0)   # RC3
-#' midpoints <- rbind(mid1, mid2, mid3)
-#' rownames(midpoints) <- paste0("RC", 1:3)
-#' colnames(midpoints) <- c("coord1D","coord2D")
-#'
-#' out_simple_mid <- vs_sov_user(
-#'   ideals    = ideals,
-#'   midpoints = midpoints,   # <- used in place of normals
-#'   votes     = votes,
-#'   absolute  = FALSE,
-#'   pr        = 0.5001,
-#'   vw        = vw,
-#'   dec       = 3
-#' )
-#'
-#' out_simple_mid$pivot_summary
-#' out_simple_mid$pivot_by_rc
-#' out_simple_mid$nv_and_angles
-#'
-#' # --- Plot (2D): one figure with ALL cut chords from midpoints ---------------
-#' vs_labels_mid <- setNames(out_simple_mid$pivot_summary$vs_sov, out_simple_mid$pivot_summary$name)
-#' plot_sov_geometry(ideals, midpoints = midpoints, label_values = vs_labels_mid, digits = 3)
-#'
-#' #############################################################################
-#' ##### EX4: Supermajority (4/5ths) absolute example in 2D #####
-#' out_4of5 <- vs_sov_user(
-#'   ideals   = ideals,
-#'   normals  = normals,
-#'   votes    = votes,
-#'   absolute = TRUE,
-#'   q        = 4,      # 4 of 5
-#'   vw       = vw,
-#'   dec      = 3
-#' )
-#'
-#' out_4of5$pivot_summary
-#' out_4of5$pivot_by_rc
-#'
-#' # --- Plot (2D): one figure with ALL normals; VS-SOV labels for 4/5 ----------
-#' vs_labels_4of5 <- setNames(out_4of5$pivot_summary$vs_sov, out_4of5$pivot_summary$name)
-#' plot_sov_geometry(ideals, normals = normals, label_values = vs_labels_4of5, digits = 3)
+#' ### Plotting (2D): one figure with ALL normals overlaid ###
+#' if (interactive()) {
+#'  vs_labels2d <- setNames(out_simple$pivot_summary$vs_sov, out_simple$pivot_summary$name)
+#'  sov:::plot_sov_geometry(ideals, normals = normals, label_values = vs_labels2d, digits = 3)
+#' }
 
 vs_sov_user <- function(
     ideals			= NULL,		# Matrix of ideal points (legislators x dimensions)

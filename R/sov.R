@@ -79,9 +79,11 @@
 #'out_sov$pivot_summary
 #'out_sov$pivot_by_angle
 #'
-#'# --- Plot (2D): label with SOVs (no normals needed here) --------------------
-#'sov_labels2d <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
-#'plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
+#' ### Plotting (2D): label with SOVs (no normals needed here) ###
+#' if (interactive()) {
+#'  sov_labels2d <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
+#'  sov:::plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
+#' }
 
 sov <- function(
     estimates		= NULL,		# Estimation results from oc, wnom, or MCMCpack.

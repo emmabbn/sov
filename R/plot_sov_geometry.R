@@ -1,25 +1,8 @@
-#' R/plot_sov_geometry.R
-#'
-#' plots SOV/VS-SOV geometry (1D or 2D)
-#' Base-graphics helper to visualize ideal points and either a normal vector
-#' (and optional cut line) or a cut midpoint (with inferred cut line).
-#'
-#' You can pass `label_values` (e.g., SOV/VS-SOV) to replace voter labels.
+#' Plot SOV toy geometry (internal)
 #' @importFrom graphics abline arrows lines par points segments text title
-#'
-#' @param ideals numeric matrix (voters x dimensions), with 1 or 2 columns, i.e. dimensions = 1,2.
-#' @param normals optional numeric matrix (rollcalls x dimensions).  Rows are RCs.
-#' @param midpoints optional numeric matrix (rollcalls x dimensions).  Rows are RCs.
-#'   If both `normals` and `midpoints` are supplied, `normals` are used.
-#' @param rc integer, which roll call (row) to draw from `normals`/`midpoints`.
-#' @param labels optional character vector of point labels; default is rownames(ideals).
-#' @param label_values optional numeric vector to display *instead of* `labels`
-#'   (e.g., SOV or VS-SOV). Will be formatted with `digits` and mapped to
-#'   `rownames(ideals)` if named; otherwise assumed in row order.
-#' @param digits integer digits for `label_values` formatting.
-#' @param pch, cex, col aesthetics for points.
-#' @param show_normal, show_cut logical; draw normal arrow and cut line.
-#' @export
+#' @name plot_sov_geometry
+#' @keywords internal
+#' @noRd
 
 plot_sov_geometry <- function(ideals,
                               normals = NULL,
@@ -122,7 +105,7 @@ plot_sov_geometry <- function(ideals,
       arrows(-arr_end, 0,  arr_end, 0, length = 0.08, angle = 20,
              col = "dodgerblue3", lwd = 2)
       arrows( arr_end, 0, -arr_end, 0, length = 0.08, angle = 20,
-             col = "dodgerblue3", lwd = 2)
+              col = "dodgerblue3", lwd = 2)
 
       left_labs  <- rc_names[which(N[, 1] < 0)]
       right_labs <- rc_names[which(N[, 1] > 0)]
@@ -133,7 +116,7 @@ plot_sov_geometry <- function(ideals,
       }
       if (length(right_labs)) {
         text( arr_end, 0, labels = paste(right_labs, collapse = ", "),
-             pos = 4, xpd = NA, cex = 0.9, col = "dodgerblue3", offset = 0.4)
+              pos = 4, xpd = NA, cex = 0.9, col = "dodgerblue3", offset = 0.4)
       }
     }
 
