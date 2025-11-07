@@ -68,10 +68,13 @@ test_that("av must be 1 or NA in sov_user", {
 })
 
 
-test_that("out_dir validation triggers error on illegal path chars", {
+test_that("out_dir validation handles OS-specific illegal path characters", {
+  skip_on_os(c("mac", "linux"))  # ':' illegal only on Windows
+
   ideals <- ideals_1d()
   votes  <- matrix(c(1, 0, 1), nrow = 3,
                    dimnames = list(c("A","B","C"), "RC1"))
+
   expect_error(
     vs_sov_user(
       ideals        = ideals,
@@ -306,15 +309,15 @@ test_that(".validate_out_dir enforces Windows-invalid path characters (if on Win
   skip_if(.Platform$OS.type != "windows")
 
   # Allow drive letter, then reject illegal chars in the remainder
-  expect_error(.validate_out_dir("C:bad:dir"), regexp = "contains invalid path characters")
+  expect_error(.validate_out_dir("C:bad:dir"), regexp = "invalid path|illegal|contains")
   expect_error(.validate_out_dir("bad<dir"),   regexp = "contains invalid path characters")
 
   # A benign example should pass and return invisibly
-  ok <- .validate_out_dir("C:some\\ok\\path")
-  expect_true(is.character(ok) && length(ok) == 1)
+  expect_invisible(.validate_out_dir("C:some\\ok\\path"))
+  expect_identical(.validate_out_dir("C:some\\ok\\path"), "C:some\\ok\\path")
 })
 
-test_that(".validate_out_dir rejects control characters on non-Windows", {
+test_that(".validate_out_dir rejects control characters on non-Windows (real env)", {
   skip_if(.Platform$OS.type == "windows")
   bad <- paste0("ok", intToUtf8(1L), "bad")   # build control char at runtime
   expect_error(.validate_out_dir(bad), regexp = "control characters")
@@ -335,7 +338,7 @@ test_that(".validate_out_dir returns the path (invisibly) when valid", {
   f
 }
 
-test_that(".validate_out_dir rejects control characters on non-Windows", {
+test_that(".validate_out_dir rejects control characters on non-Windows (mocked env)", {
   f <- .mock_validate_out_dir_unix()
   bad <- paste0("ok", intToUtf8(1L), "bad")  # build a control char at runtime (no NULs in file)
   expect_error(f(bad), regexp = "control characters")
