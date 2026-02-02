@@ -4,7 +4,7 @@
 #' @keywords internal
 #' @noRd
 
-plot_sov_geometry <- function(ideals,
+plot_sov_geometry <- function(ideals = NULL,
                               normals = NULL,
                               midpoints = NULL,
                               label_values = NULL,
@@ -105,7 +105,7 @@ plot_sov_geometry <- function(ideals,
       arrows(-arr_end, 0,  arr_end, 0, length = 0.08, angle = 20,
              col = "dodgerblue3", lwd = 2)
       arrows( arr_end, 0, -arr_end, 0, length = 0.08, angle = 20,
-              col = "dodgerblue3", lwd = 2)
+             col = "dodgerblue3", lwd = 2)
 
       left_labs  <- rc_names[which(N[, 1] < 0)]
       right_labs <- rc_names[which(N[, 1] > 0)]
@@ -116,7 +116,7 @@ plot_sov_geometry <- function(ideals,
       }
       if (length(right_labs)) {
         text( arr_end, 0, labels = paste(right_labs, collapse = ", "),
-              pos = 4, xpd = NA, cex = 0.9, col = "dodgerblue3", offset = 0.4)
+             pos = 4, xpd = NA, cex = 0.9, col = "dodgerblue3", offset = 0.4)
       }
     }
 
