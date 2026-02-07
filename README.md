@@ -9,25 +9,26 @@
 <!-- badges: end -->
 
 R package `sov` calculates vote-specific Shapley-Owen values (vs-SOVs)
-and Traditional Shapely-Owen values (SOVs) for assemblies with weighted
+and traditional Shapely-Owen values (SOVs) for assemblies with weighted
 voting, various voting thresholds, and different numbers of dimensions.
 
 ## Description
 
-This program calculates vs-SOVs and traditional SOVs in multidimensional
-space.
+This program calculates `vs-SOVs` and traditional `SOVs` in
+multidimensional space.
 
-- vs-SOVs utilize the ‘’observed’’ normal vectors and their reflections
+- `vs-SOVs` utilize the “observed” normal vectors and their reflections
   to determine the proportion of times a voter pivots.  
-- Traditional SOVs utilize all angles of the vote from 0 to 360 degrees
-  for each dimension greater than 1.  
+- Traditional `SOVs` utilize all angles of the vote from 0 to 360
+  degrees for each dimension greater than 1.  
 - The package works for 1 to 4 dimensions, weighted voting, and various
   voting thresholds.
 
 #### Voting Thresholds
 
 The package distinguishes between simple and absolute k-majority voting
-thresholds (Dougherty and Edward 2004):
+thresholds ([Dougherty and Edward
+2004](https://doi.org/10.1177/1470594X04042962)):
 
 - **Absolute k-majority:** Requires the yeas (weighted or unweighted) to
   exceed a fixed number `q`, which treats abstentions as “nays.”
@@ -44,11 +45,11 @@ vs_sov(..., absolute = TRUE, q = 218)
 vs_sov(..., absolute = FALSE, pr = 0.5001)
 ```
 
-Functions vs_sov() and sov() use package-estimated inputs from
-W-NOMINATE (wnominate), Optimal Classification (oc), or MCMCpack
-(MCMCpack), with a function identifying which input is provided.
+Functions `vs_sov()` and `sov()` use package-estimated inputs from
+W-NOMINATE (`wnominate`), Optimal Classification (`oc`), or MCMCpack
+(`MCMCpack`), with a function identifying which input is provided.
 
-Functions vs_sov_user() and sov_user() use ideal points, and other
+Functions `vs_sov_user()` and `sov_user()` use ideal points, and other
 information, provided by the user.
 
 ## Installation
@@ -67,15 +68,15 @@ library(sov)
 The following examples provide an **overview of the package’s core
 functions** and the type of data that can be used in these examples. We
 use simplified models to clearly illustrate the geometry of the
-Shapley-Owen Value (SOV) and Vote-Specific Shapley-Owen Value (VS-SOV)
+Shapley-Owen Value (SOV) and vote-specific Shapley-Owen Value (vs-SOV)
 calculations.
 
-## Single-Dimension & vs_sov_user()
+## Single-Dimension & `vs_sov_user()`
 
-The first example showcases the simplest case: three voters in a
-one-dimensional policy space, voting on two roll calls. We use the
-user-defined input function, vs_sov_user(), to calculate the VS-SOVs
-under simple majority rule.
+Here, we demonstrate the use of `vs_sov_user()` with the simplest case:
+three voters in a one-dimensional policy space, voting on two roll
+calls. We use the user-defined input function, `vs_sov_user()`, to
+calculate the `vs-SOVs` under simple majority rule.
 
 ### Inputs and Setup
 
@@ -112,11 +113,11 @@ vw <- rep(1, nrow(ideals))
 
 #### Example 1
 
-The first example showcases the simplest case: three voters in a
+As a reminder, this example illustrates a case with three voters in a
 one-dimensional policy space, voting on two roll calls. We set the
 required majority ($pr$) to be $50\% + \epsilon$. The results show that
-voter $i2$ (the median voter at 0.0) has the highest VS-SOV, reflecting
-their central position in this simple policy space.
+voter $i_2$ (the median voter at 0.0) has the highest `VS-SOV`,
+reflecting their central position in this simple policy space.
 
 ``` r
 ##### EX1: Vote-specific SOV (simple majority among attendees in 1D) #####
@@ -211,9 +212,9 @@ vw <- rep(1, nrow(ideals))
 
 #### Example 2
 
-The second example illustates the use of vs_sov_user() in
+The second example illustrates the use of `vs_sov_user()` in
 two-dimensional space, requiring the simple majority ($pr$) to be
-$50\% + \epsilon$. the VS-SOV calculation determines the influence of
+$50\% + \epsilon$. The `vs-SOV` calculation determines the influence of
 each voter based on the proximity of their ideal point to the three roll
 call cut lines, weighted by the voter’s attendance. Voter $i_5$ (at the
 origin) pivots all the roll calls among the attendees.
@@ -267,7 +268,7 @@ labels_ex2 <- setNames(out_ex2$pivot_summary$vs_sov, out_ex2$pivot_summary$name)
 #### Example 3
 
 Example 3 demonstrates how midpoints can be used to infer the roll call
-geometry in place of normal vectors. A midpoint is the orthoganal
+geometry in place of normal vectors. A midpoint is the orthogonal
 intersection of the normal vector and cut hyperplane. A cut hyperplane
 separates the yeas from the nays based on observed votes. Again, voter
 $i_5$ (at the origin) pivots all the roll calls among the attendees.
@@ -327,11 +328,11 @@ vs_labels_mid <- setNames(out_ex3$pivot_summary$vs_sov, out_ex3$pivot_summary$na
 
 #### Example 4
 
-Example 4 illustrates how VS-SOVs can be calculated with an
-absolute-supermajority rule threshold of 4/5th. Note the use of $q$.
-Although this example is similar to example 2, the 4/5ths rule makes
-$i_2$ pivotal on the second and third roll calls, while $i_4$ is pivotal
-on the first roll call – counting in the direction of the normal vector.
+Example 4 illustrates how `vs-SOVs` can be calculated with an absolute
+supermajority rule threshold of 4/5th. Note the use of $q$. Although
+this example is similar to example 2, the 4/5ths rule makes $i_2$
+pivotal on the second and third roll calls, while $i_4$ is pivotal on
+the first roll call – counting in the direction of the normal vector.
 
 ``` r
 ##### EX4: Supermajority (4/5ths) absolute example in 2D #####
@@ -371,21 +372,21 @@ vs_labels_ex4 <- setNames(out_ex4$pivot_summary$vs_sov, out_ex4$pivot_summary$na
 
 <img src="man/figures/README-ex4-1.png" width="100%" />
 
-## Multidimensional & sov_user()
+## Multidimensional & `sov_user()`
 
-Traditional SOVs involve integration over the entire policy space.
-Functions sov_user() and sov() approximate that integration by
-calculating the proportion of angles an individual pivots for each angle
-rotated through the space. For these functions users only supply ideal
-points and an attendance vector (i.e., a vector of who is always
+Traditional `SOVs` involve integration over the entire policy space.
+Functions `sov_user()` and `sov()` approximate that integration by
+calculating the proportion of angles and individual pivots for each
+angle rotated through the space. For these functions, users only supply
+ideal points and an attendance vector (i.e., a vector of who is always
 present). You do not supply roll-call information.
 
 #### Example 5
 
-Example 5 illustrates the use of sov_user() which calculates traditional
-Shapley-Owen Values (SOVs) using user supplied inputs. The result shows
-the voter’s influence over all possible angles assuming those angles
-increase in increments of 5 degrees and are equally likely.
+Example 5 illustrates the use of `sov_user()` which calculates
+traditional Shapley-Owen Values (`SOVs`) using user supplied inputs. The
+result shows the voter’s influence over all possible angles assuming
+those angles increase in increments of 5 degrees and are equally likely.
 
 ``` r
 ##### EX5: Traditional SOVs in 2D #####
@@ -435,18 +436,18 @@ labels_ex5 <- setNames(out_ex5$pivot_summary$sov, out_ex5$pivot_summary$name)
 
 ## Multidimensional & vs_sov()
 
-Vote-Specific SOVs (VS-SOVs) can also be calculated from package
-estimated output, $estimates$ using vs_sov(). The function can
-differentiate $estimates$ produced by W-NOMINATE, Optimal
+Vote-specific SOVs (`VS-SOVs`) can also be calculated from package
+estimated output, `estimates` using `vs_sov()`. The function can
+differentiate `estimates` produced by W-NOMINATE, Optimal
 Classification, and MCMCpack.
 
 #### Example 6
 
-Example 6 illustrates the use of vs_sov() based on W-NOMINATE. Note, it
-starts by fabricating a tiny WNOMINATE-like object built from the same
-2-D ideals and roll calls used in Example 2. Users that have estimated
-ideal points using W-NOMINATE (resp. oc or MCMCpack) will only provide
-$estimates$. They will not need all of these preliminaries.
+Example 6 illustrates the use of `vs_sov()` based on W-NOMINATE. Note,
+it starts by fabricating a tiny WNOMINATE-like object built from the
+same 2-D ideals and roll calls used in Example 2. Users that have
+estimated ideal points using W-NOMINATE (resp., `oc` or `MCMCpack`) will
+only provide $estimates$. They will not need all of these preliminaries.
 
 ``` r
 ##### EX6: VS-SOVs in 2D using W-NOMINATE OUTPUT #####
@@ -570,15 +571,15 @@ vs_sov_user(
 # Note: If "out_dir" is missing, a path will be created to a subfolder called "output."
 ```
 
-## Multidimensional & sov()
+## Multidimensional & `sov()`
 
-sov() calculates Traditional SOVs (SOVs) from package estimated output,
-called $estimates$. The function can differentiate $estimates$ produced
-by W-NOMINATE, Optimal Classification, and MCMCpack
+`sov()` calculates traditional SOVs (`SOVs`) from package estimated
+output, called `estimates`. The function can differentiate `estimates`
+produced by W-NOMINATE, Optimal Classification, and MCMCpack.
 
 #### Example 7
 
-Example 7 illustrates the use of sov() based on W-NOMINATE output.
+Example 7 illustrates the use of `sov()` based on W-NOMINATE output.
 
 ``` r
 ##### EX7: SOVs in 2D using W-NOMINATE OUTPUT #####
