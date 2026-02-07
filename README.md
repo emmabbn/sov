@@ -166,7 +166,7 @@ labels_ex1 <- setNames(out_ex1$pivot_summary$vs_sov, out_ex1$pivot_summary$name)
 
 <img src="man/figures/README-ex1-1.png" width="100%" />
 
-## Multidimensional & vs_sov_user()
+## Multidimensional & `vs_sov_user()`
 
 Examples 2-4 expand the space to two dimensions (2D) using 5 voters and
 3 roll calls. They illlustrate the use of simple versus absolute
