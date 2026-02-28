@@ -123,7 +123,7 @@ rownames(votes) <- rownames(ideals)
 ## --- Equal voting weights ---------------------------------------------------
 vw <- rep(1, nrow(ideals))
 
-##### EX2: Simple majority (2D) -- 50\% + epsilon among attendees #####
+##### EX2: Simple majority (2D) -- 50 percent + epsilon among attendees #####
 out_simple <- vs_sov_user(
   ideals   = ideals,
   normals  = normals,
