@@ -1,3 +1,3 @@
-# sov 1.0.0
+# sov 1.0.1
 
-* Initial CRAN submission.
+* Fix GitHub URL after repository transfer.
