@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 # sov
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/emmabbn/sov/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/emmabbn/sov/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/spatial-voting-lab/sov/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/spatial-voting-lab/sov/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 R package `sov` calculates vote-specific Shapley-Owen values (vs-SOVs) and traditional Shapely-Owen values (SOVs) for assemblies with weighted voting, various voting thresholds, and different numbers of dimensions.

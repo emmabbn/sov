@@ -6,3 +6,4 @@
 ^cran-comments\.md$
 ^sov-manual\.tex$
 ^sov-manual\.log$
+^CRAN-SUBMISSION$

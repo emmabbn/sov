@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/emmabbn/sov/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/emmabbn/sov/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/spatial-voting-lab/sov/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/spatial-voting-lab/sov/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 R package `sov` calculates vote-specific Shapley-Owen values (vs-SOVs)
