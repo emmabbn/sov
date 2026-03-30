@@ -10,7 +10,6 @@ call_validate_sov_user <- function(overrides = list()) {
   args <- list(
     ideals        = ideals,
     av            = c(1, 1),
-    weight_nom    = FALSE,
     absolute      = TRUE,
     vw            = NULL,        # optional
     q             = NULL,        # optional
@@ -52,7 +51,6 @@ test_that("`av` must be numeric 1/NA and length-match ideals", {
     validate_sov_user_args(
       ideals        = ideals,
       av            = NULL,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = NULL,
       q             = NULL,
@@ -77,15 +75,7 @@ test_that("`av` must be numeric 1/NA and length-match ideals", {
 })
 
 
-test_that("`weight_nom` and `absolute` must be logical scalars", {
-  expect_error(
-    call_validate_sov_user(list(weight_nom = NA)),
-    regexp = "`weight_nom` must be a single logical"
-  )
-  expect_error(
-    call_validate_sov_user(list(weight_nom = c(TRUE, FALSE))),
-    regexp = "`weight_nom` must be a single logical"
-  )
+test_that("`absolute` must be a logical scalar", {
   expect_error(
     call_validate_sov_user(list(absolute = NA)),
     regexp = "`absolute` must be a single logical"

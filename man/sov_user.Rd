@@ -7,7 +7,6 @@
 sov_user(
   ideals = NULL,
   av = NULL,
-  weight_nom = FALSE,
   absolute = FALSE,
   vw = NULL,
   q = NULL,
@@ -15,7 +14,7 @@ sov_user(
   nPoints1 = 360,
   nPoints2 = 360,
   dec = 3,
-  out_dir = "output",
+  out_dir = NULL,
   print_results = FALSE
 )
 }
@@ -23,8 +22,6 @@ sov_user(
 \item{ideals}{Matrix of ideal points (legislators x dimensions)}
 
 \item{av}{Attendance vector coded attend=1, "not attend"=NA.}
-
-\item{weight_nom}{If TRUE use weights estimated from wnom output, if FALSE use vector of 1's. ... For wnom only.}
 
 \item{absolute}{If TRUE, q is a scalar of yeas needed to pass proposal.  If FALSE, pr is the proportion of yeas need to pass a proposal among voters attending.}
 
@@ -40,7 +37,7 @@ sov_user(
 
 \item{dec}{The number of decimal places reported for vs-sovs.}
 
-\item{out_dir}{The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.}
+\item{out_dir}{The path to the output directory. This is used only when \code{print_results = TRUE} and must be supplied explicitly by the user.}
 
 \item{print_results}{If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.}
 }
@@ -93,6 +90,6 @@ out_sov$pivot_by_angle
 ### Plotting (2D): label with SOVs (no normals needed) ###
  if (interactive()) {
  sov_labels2d <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
- sov:::plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
+ sov::plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
 }
 }

@@ -34,7 +34,6 @@ call_validate_user <- function(overrides = list(), use_midpoints = FALSE) {
     ideals        = ideals,
     normals       = if (!use_midpoints) normals else NULL,
     midpoints     = if (use_midpoints)  midpoints else NULL,
-    weight_nom    = FALSE,
     absolute      = TRUE,
     vw            = c(1, 1, 1),
     q             = 2,
@@ -152,7 +151,6 @@ test_that("number of legislators in ideals must match rows in votes", {
       ideals        = ideals,
       normals       = normals,
       midpoints     = NULL,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = NULL,
       q             = 2,
@@ -193,7 +191,6 @@ test_that("ideals columns must equal normals columns (normals path)", {
       ideals        = ideals,
       normals       = normals,
       midpoints     = NULL,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = NULL,
       q             = 2,
@@ -236,7 +233,6 @@ test_that("ideals columns must equal midpoints columns (midpoints path)", {
       ideals        = ideals,
       normals       = NULL,
       midpoints     = mids,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = NULL,
       q             = 2,
@@ -251,13 +247,6 @@ test_that("ideals columns must equal midpoints columns (midpoints path)", {
   )
 })
 
-
-# ---- weight_nom must be logical scalar ----
-test_that("`weight_nom` must be a single logical value", {
-  expect_error(call_validate_user(list(weight_nom = NA)),            regexp = "weight_nom.*single logical")
-  expect_error(call_validate_user(list(weight_nom = c(TRUE,FALSE))), regexp = "weight_nom.*single logical")
-  expect_error(call_validate_user(list(weight_nom = "yes")),         regexp = "weight_nom.*single logical")
-})
 
 # ---- absolute must be logical scalar ----
 test_that("`absolute` must be a single logical value", {
@@ -292,7 +281,6 @@ test_that("validate_vs_sov_user_args passes through vw = NULL; defaulting left t
     ideals     = ideals,
     normals    = normals,
     midpoints  = NULL,
-    weight_nom = FALSE,
     absolute   = FALSE,
     vw         = NULL,          # <- omitted on purpose
     q          = NULL,
@@ -374,7 +362,6 @@ test_that("normals entries must lie in [-1, 1]", {
       ideals        = ideals,
       normals       = normals,
       midpoints     = NULL,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = c(1,1),
       q             = 2,
@@ -403,7 +390,6 @@ test_that("number of legislators in ideals must match rows in votes (normals pat
       ideals        = ideals,
       normals       = normals,
       midpoints     = NULL,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = c(1,1,1),
       q             = 2,
@@ -432,7 +418,6 @@ test_that("number of legislators in ideals must match rows in votes (midpoints p
       ideals        = ideals,
       normals       = NULL,
       midpoints     = midpoints,
-      weight_nom    = FALSE,
       absolute      = TRUE,
       vw            = c(1,1,1),
       q             = 2,
