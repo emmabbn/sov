@@ -15,7 +15,7 @@
 #' @param pr The proportion of yea votes needed to pass a proposal among voters attending for simple k-majority rule (scalar, default: 0.5001).
 #' @param votes Vote matrix (legislators x rollcalls) coded yea=1, nay=0, and 9="attend but abstain".  All other values should be NA.
 #' @param dec The number of decimal places reported for vs-sovs.
-#' @param out_dir The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
+#' @param out_dir The path to the output directory. This is used only when `print_results = TRUE` and must be supplied explicitly by the user.
 #' @param print_results If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 #'
 #' @returns A list with data frames containing ideal points, vs-SOVs for each voter, number of pivots, name of pivot(s) for each roll call, and normal vectors and angles for each roll call.
@@ -112,7 +112,7 @@
 #' ### Plotting (2D): one figure with ALL normals overlaid ###
 #' if (interactive()) {
 #'  vs_labels2d <- setNames(out_simple$pivot_summary$vs_sov, out_simple$pivot_summary$name)
-#'  sov:::plot_sov_geometry(ideals, normals = normals, label_values = vs_labels2d, digits = 3)
+#'  sov::plot_sov_geometry(ideals, normals = normals, label_values = vs_labels2d, digits = 3)
 #' }
 
 vs_sov_user <- function(
@@ -126,7 +126,7 @@ vs_sov_user <- function(
     pr				= 0.5001,	# The proportion of yea votes needed to pass a proposal among voters attending for simple k-majority rule (scalar, default: 0.5001).
     votes			= NULL,		# Vote matrix (legislators x rollcalls) coded yea=1, nay=0, and 9="attend but abstain".  All other values should be NA.
     dec				= 3,		# The number of decimal places reported for vs-sovs.
-    out_dir 		= "output",	# The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
+    out_dir 		= NULL,		# The path to the output directory. Used only when print_results = TRUE and must be supplied explicitly.
     print_results	= FALSE		# If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 ) {
 
@@ -195,8 +195,15 @@ vs_sov_user <- function(
   nv_and_angles <- extract_angles(normals)
 
   # save results to an excel file
-  if(print_results==TRUE){
-    excel_results_vs_sov(pivot_summary, pivot_by_rc, nv_and_angles, file = "vs-sovs.xlsx", dec, out_dir)
+  if (print_results == TRUE) {
+    excel_results_vs_sov(
+      pivot_summary = pivot_summary,
+      pivot_by_rc = pivot_by_rc,
+      nv_and_angles = nv_and_angles,
+      file = "vs-sovs.xlsx",
+      dec = dec,
+      out_dir = out_dir
+    )
   }
 
   return( list(

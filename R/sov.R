@@ -15,7 +15,7 @@
 #' @param nPoints1 The number of points sampled along the azimuth (the first spherical coordinate the azimuth).  Sampled from 0 to 2*pi.
 #' @param nPoints2 The number of points sampled along the inclination (the second and third spherical coordinate).  Sampled from 0 to 2*pi.
 #' @param dec The number of decimal places reported for vs-sovs.
-#' @param out_dir The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
+#' @param out_dir The path to the output directory. This is used only when `print_results = TRUE` and must be supplied explicitly by the user.
 #' @param print_results If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 #'
 #' @returns A list with data frames containing ideal points, number of pivots, name of pivots for each direction sampled, and SOVs for each voter.
@@ -82,7 +82,7 @@
 #' ### Plotting (2D): label with SOVs (no normals needed here) ###
 #' if (interactive()) {
 #'  sov_labels2d <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
-#'  sov:::plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
+#'  sov::plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
 #' }
 
 sov <- function(
@@ -96,7 +96,7 @@ sov <- function(
     nPoints1   		= 360,		# the number of points sampled along the azimuth (the first spherical coordinate the azimuth).  Sampled from 0 to 2*pi.
     nPoints2   		= 360,		# the number of points sampled along the inclination (the second and third spherical coordinate).  Sampled from 0 to 2*pi.
     dec		   		= 3,		# The number of decimal places reported for vs-sovs.
-    out_dir    		= "output",	# The path to the output directory. If print_results = TRUE, the default is a subdirectory of the current path called "output", which the program creates.
+    out_dir    		= NULL,		# The path to the output directory. Used only when print_results = TRUE and must be supplied explicitly.
     print_results	= FALSE		# If TRUE, print results to an excel file in out_dir; if FALSE, don't print results.  In both cases, results are returned.
 ) {
 
@@ -159,8 +159,14 @@ sov <- function(
   pivot_by_angle <- pivot_by_angle[, colnames(pivot_by_angle) != "RC_num"]
 
   # save results to an excel file
-  if(print_results==TRUE){
-    excel_results_sov(pivot_summary, pivot_by_angle, file = "sovs.xlsx", dec, out_dir)
+  if (print_results == TRUE) {
+    excel_results_sov(
+      pivot_summary = pivot_summary,
+      pivot_by_angle = pivot_by_angle,
+      file = "sovs.xlsx",
+      dec = dec,
+      out_dir = out_dir
+    )
   }
 
   return( list(

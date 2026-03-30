@@ -602,13 +602,18 @@ create.qvec <- function(absolute=TRUE, q=NULL, pr=0.5001, vwmat, votes)
 
 ##### .validate_out_dir #####
 # validates the path to the output directory
-# inputs: out_dir (character string).
+# inputs: out_dir (character string or NULL).
 # output: an invisible version of the out_dir (which can be captured).
 .validate_out_dir <- function(out_dir)
 {
+  # NULL is allowed here; callers decide when it is required.
+  if (is.null(out_dir)) {
+    return(invisible(NULL))
+  }
+
   # Must be a single, non-NA character string
   if (!is.character(out_dir) || length(out_dir) != 1L || is.na(out_dir)) {
-    stop("`out_dir` must be a single, non-NA character string.")
+    stop("`out_dir` must be NULL or a single, non-NA character string.")
   }
   # Not empty or whitespace-only
   if (!nzchar(out_dir) || nchar(trimws(out_dir)) == 0L) {
@@ -676,12 +681,19 @@ validate_vs_sov_args <- function(estimates, weight_nom, absolute, vw, q, pr, dec
     stop("'dec' must be a single integer between 1 and 9.  The default is 3.")
   }
 
-  # validate out_dir
-  .validate_out_dir(out_dir)
-
   # print_results must be a logical scalar
   if (!is.logical(print_results) || length(print_results) != 1 || is.na(print_results)) {
     stop("'print_results' must be a single logical value (TRUE or FALSE).")
+  }
+
+  # validate out_dir only when writing results
+  if (isTRUE(print_results)) {
+    if (is.null(out_dir)) {
+      stop("When `print_results = TRUE`, you must supply `out_dir`, e.g. `tempdir()` or another user-chosen directory.")
+    }
+    .validate_out_dir(out_dir)
+  } else {
+    .validate_out_dir(out_dir)
   }
 }
 
@@ -744,12 +756,19 @@ validate_sov_args <- function(estimates, weight_nom, absolute, vw, q, pr, nPoint
     stop("'dec' must be a single integer between 1 and 9. The default is 3.")
   }
 
-  # validate out_dir
-  .validate_out_dir(out_dir)
-
   # print_results must be a logical scalar
   if (!is.logical(print_results) || length(print_results) != 1 || is.na(print_results)) {
     stop("'print_results' must be a single logical value (TRUE or FALSE).")
+  }
+
+  # validate out_dir only when writing results
+  if (isTRUE(print_results)) {
+    if (is.null(out_dir)) {
+      stop("When `print_results = TRUE`, you must supply `out_dir`, e.g. `tempdir()` or another user-chosen directory.")
+    }
+    .validate_out_dir(out_dir)
+  } else {
+    .validate_out_dir(out_dir)
   }
 }
 
@@ -879,13 +898,21 @@ validate_vs_sov_user_args <- function(ideals, normals, midpoints, weight_nom, ab
     stop("`dec` must be a single integer between 1 and 9.  The default is 3.")
   }
 
-  # validate out_dir
-  .validate_out_dir(out_dir)
-
   # print_results must be a logical scalar
   if (!is.logical(print_results) || length(print_results) != 1 || is.na(print_results)) {
     stop("`print_results` must be a single logical value (TRUE or FALSE).")
   }
+
+  # validate out_dir only when writing results
+  if (isTRUE(print_results)) {
+    if (is.null(out_dir)) {
+      stop("When `print_results = TRUE`, you must supply `out_dir`, e.g. `tempdir()` or another user-chosen directory.")
+    }
+    .validate_out_dir(out_dir)
+  } else {
+    .validate_out_dir(out_dir)
+  }
+
 
   # Check votes
   # check if all elements are 0, 1, 9, or NA
@@ -980,12 +1007,19 @@ validate_sov_user_args <- function(ideals, av, weight_nom, absolute, vw, q, pr, 
     stop("`dec` must be a single integer between 1 and 9. The default is 3.")
   }
 
-  # validate out_dir
-  .validate_out_dir(out_dir)
-
   # print_results must be a logical scalar
   if (!is.logical(print_results) || length(print_results) != 1 || is.na(print_results)) {
     stop("`print_results` must be a single logical value (TRUE or FALSE).")
+  }
+
+  # validate out_dir only when writing results
+  if (isTRUE(print_results)) {
+    if (is.null(out_dir)) {
+      stop("When `print_results = TRUE`, you must supply `out_dir`, e.g. `tempdir()` or another user-chosen directory.")
+    }
+    .validate_out_dir(out_dir)
+  } else {
+    .validate_out_dir(out_dir)
   }
 }
 
@@ -1312,15 +1346,21 @@ summarize_pivots <- function(ideals, pivot_by_rc)
 #     nv_and_angles: data.frame of normal vectors & angles
 #     file:          output filename
 #     dec:           number of decimals for rounding sov
-#		out_dir:	   subdirectory in which the output files will be saved.
+#     out_dir:       directory in which the output file will be saved; must be supplied explicitly
 # output: excel file with three tabs saved to "file"
-excel_results_vs_sov <- function(pivot_summary, pivot_by_rc, nv_and_angles, file = "vs-sovs.xlsx", dec = 3, out_dir  = "output")
+excel_results_vs_sov <- function(pivot_summary, pivot_by_rc, nv_and_angles, file = "vs-sovs.xlsx", dec = 3, out_dir = NULL)
 {
   ## Warnings and general.
   # make sure vs_sov is a column name in pivot_summary
   if (!"vs_sov" %in% names(pivot_summary)) {
     stop("`pivot_summary` must contain a column named 'vs_sov'")
   }
+  # require explicit output directory
+  if (is.null(out_dir)) {
+    stop("`out_dir` must be supplied explicitly.")
+  }
+  .validate_out_dir(out_dir)
+
   # make sure out_dir exists on the user's machine
   if (!dir.exists(out_dir)) {
     dir.create(out_dir, recursive = TRUE)
@@ -1361,19 +1401,25 @@ excel_results_vs_sov <- function(pivot_summary, pivot_by_rc, nv_and_angles, file
 ##### excel_results_sov #####
 # this function saves results in two different tabs of an excel file -- for use in sov().
 # inputs:
-#     pivot_summary: 	data.frame of sov summary
-#     pivot_by_angle:	data.frame of pivots by angle
-#     file:          output filename
-#     dec:           number of decimals for rounding sov
-#		out_dir:	   subdirectory in which the output files will be saved.
+#     pivot_summary:  data.frame of sov summary
+#     pivot_by_angle: data.frame of pivots by angle
+#     file:           output filename
+#     dec:            number of decimals for rounding sov
+#     out_dir:        directory in which the output file will be saved; must be supplied explicitly
 # output: excel file with two tabs saved to "file"
-excel_results_sov <- function(pivot_summary, pivot_by_angle, file = "sovs.xlsx", dec = 3, out_dir  = "output")
+excel_results_sov <- function(pivot_summary, pivot_by_angle, file = "sovs.xlsx", dec = 3, out_dir = NULL)
 {
   ## Warnings and general.
   # make sure sov is a column name in pivot_summary
   if (!"sov" %in% names(pivot_summary)) {
     stop("`pivot_summary` must contain a column named 'sov'")
   }
+  # require explicit output directory
+  if (is.null(out_dir)) {
+    stop("`out_dir` must be supplied explicitly.")
+  }
+  .validate_out_dir(out_dir)
+
   # make sure out_dir exists on the user's machine
   if (!dir.exists(out_dir)) {
     dir.create(out_dir, recursive = TRUE)
