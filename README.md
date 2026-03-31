@@ -169,9 +169,9 @@ labels_ex1 <- setNames(out_ex1$pivot_summary$vs_sov, out_ex1$pivot_summary$name)
 ## Multidimensional & `vs_sov_user()`
 
 Examples 2-4 expand the space to two dimensions (2D) using 5 voters and
-3 roll calls. They illlustrate the use of simple versus absolute
-majority rule (EX2 and EX4), the use of midpoints in place of normal
-vectors (EX2 and EX3), and a supermajority rule (EX4).
+3 roll calls. They illustrate the use of simple versus absolute majority
+rule (EX2 and EX4), the use of midpoints in place of normal vectors (EX2
+and EX3), and a supermajority rule (EX4).
 
 ### Inputs and Setup
 
