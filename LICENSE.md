@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2025 sov authors
+Copyright (c) 2026 sov authors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

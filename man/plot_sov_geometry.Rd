@@ -33,7 +33,7 @@ Invisibly returns \code{NULL} after drawing the SOV geometry on the active graph
 This function plots voter ideal points together with roll-call normal vectors (or midpoint cutting lines) in one or two dimensions.
 }
 \examples{
---- Ideals: 5 voters in 2D -----------------------------------------------
+##--- Ideals: 5 voters in 2D -----------------------------------------------
 i1 <- c( 0.7,  0.7)
 i2 <- c(-0.5,  0.5)
 i3 <- c(-0.7, -0.7)
