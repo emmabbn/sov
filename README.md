@@ -52,6 +52,11 @@ W-NOMINATE (`wnominate`), Optimal Classification (`oc`), or MCMCpack
 Functions `vs_sov_user()` and `sov_user()` use ideal points, and other
 information, provided by the user.
 
+Function `plot_sov_geometry()` plots voter ideal points together with
+roll-call normal vectors (or midpoint cutting lines) in one or two
+dimensions. It can be used to verify whether ideal points, normal
+vectors, and midpoints have been computed and oriented correctly.
+
 ## Installation
 
 You can install the development version of `sov` from
@@ -59,7 +64,7 @@ You can install the development version of `sov` from
 
 ``` r
 # install.packages("pak")
-pak::pak("emmabbn/sov")
+pak::pak("spatial-voting-lab/sov")
 library(sov)
 ```
 
@@ -164,7 +169,7 @@ labels_ex1 <- setNames(out_ex1$pivot_summary$vs_sov, out_ex1$pivot_summary$name)
 )
 ```
 
-<img src="man/figures/README-ex1-1.png" width="100%" />
+<img src="man/figures/README-ex1-1.png" alt="" width="100%" />
 
 ## Multidimensional & `vs_sov_user()`
 
@@ -263,7 +268,7 @@ labels_ex2 <- setNames(out_ex2$pivot_summary$vs_sov, out_ex2$pivot_summary$name)
 )
 ```
 
-<img src="man/figures/README-ex2-1.png" width="100%" />
+<img src="man/figures/README-ex2-1.png" alt="" width="100%" />
 
 #### Example 3
 
@@ -324,7 +329,7 @@ vs_labels_mid <- setNames(out_ex3$pivot_summary$vs_sov, out_ex3$pivot_summary$na
 )
 ```
 
-<img src="man/figures/README-ex3-1.png" width="100%" />
+<img src="man/figures/README-ex3-1.png" alt="" width="100%" />
 
 #### Example 4
 
@@ -370,7 +375,7 @@ vs_labels_ex4 <- setNames(out_ex4$pivot_summary$vs_sov, out_ex4$pivot_summary$na
 )
 ```
 
-<img src="man/figures/README-ex4-1.png" width="100%" />
+<img src="man/figures/README-ex4-1.png" alt="" width="100%" />
 
 ## Multidimensional & `sov_user()`
 
@@ -432,7 +437,7 @@ labels_ex5 <- setNames(out_ex5$pivot_summary$sov, out_ex5$pivot_summary$name)
 )
 ```
 
-<img src="man/figures/README-ex5-1.png" width="100%" />
+<img src="man/figures/README-ex5-1.png" alt="" width="100%" />
 
 ## Multidimensional & vs_sov()
 
@@ -553,7 +558,7 @@ normals_ex6 <- normals_ex6 / sqrt(rowSums(spreads^2)) # Use spreads here to norm
 )
 ```
 
-<img src="man/figures/README-ex6-1.png" width="100%" />
+<img src="man/figures/README-ex6-1.png" alt="" width="100%" />
 
 #### Excel Export (EX6)
 
@@ -619,7 +624,7 @@ labels_ex7 <- setNames(out_ex7$pivot_summary$sov, out_ex7$pivot_summary$name)
 )
 ```
 
-<img src="man/figures/README-ex7-1.png" width="100%" />
+<img src="man/figures/README-ex7-1.png" alt="" width="100%" />
 
 ## Tips
 

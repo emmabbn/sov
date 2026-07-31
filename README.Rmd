@@ -52,13 +52,15 @@ Functions `vs_sov()` and `sov()` use package-estimated inputs from W-NOMINATE (`
 
 Functions `vs_sov_user()` and `sov_user()` use ideal points, and other information, provided by the user.
 
+Function `plot_sov_geometry()` plots voter ideal points together with roll-call normal vectors (or midpoint cutting lines) in one or two dimensions. It can be used to verify whether ideal points, normal vectors, and midpoints have been computed and oriented correctly.
+
 ## Installation
 
 You can install the development version of `sov` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("emmabbn/sov")
+pak::pak("spatial-voting-lab/sov")
 library(sov)
 ```
 

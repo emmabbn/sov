@@ -1,8 +1,79 @@
-#' Plot SOV toy geometry (internal)
+#' Plot SOV geometry
+#'
+#' This function plots voter ideal points together with roll-call normal vectors (or midpoint cutting lines) in one or two dimensions.
+#'
 #' @importFrom graphics abline arrows lines par points segments text title
-#' @name plot_sov_geometry
-#' @keywords internal
-#' @noRd
+#'
+#' @param ideals Numeric matrix of voter ideal points with one or two columns.
+#' @param normals Optional numeric matrix of roll-call normal vectors.
+#' @param midpoints Optional numeric matrix of roll-call midpoints.
+#' @param label_values Optional numeric values used to label voter points.
+#' @param digits Number of decimal places used for value labels.
+#' @param main Optional plot title.
+#'
+#' @returns Invisibly returns `NULL` after drawing the SOV geometry on the active graphics device.
+#'
+#' @export
+#'
+#' @examples
+#'--- Ideals: 5 voters in 2D -----------------------------------------------
+#'i1 <- c( 0.7,  0.7)
+#'i2 <- c(-0.5,  0.5)
+#'i3 <- c(-0.7, -0.7)
+#'i4 <- c( 0.5, -0.5)
+#'i5 <- c( 0.0,  0.0)
+#'ideals <- rbind(i1, i2, i3, i4, i5)
+#'rownames(ideals) <- paste0("i", 1:5)
+#'colnames(ideals) <- c("coord1D","coord2D")
+#'
+#'# Build a minimal WNOM-like 'estimates' object for sov() identification
+#'spreads <- rbind(c( 1,  0), c( 0,  1), c(-1,  0))
+#'midpoints <- rbind(c( 0.10,  0.00), c( 0.00, -0.10), c( 0.05,  0.00))
+#'rownames(spreads)  <- rownames(midpoints) <- paste0("RC", 1:3)
+#'colnames(spreads)  <- colnames(midpoints) <- c("dim1","dim2")
+#'
+#'leg <- data.frame(
+#'  coord1D   = ideals[, 1],
+#'  coord2D   = ideals[, 2],
+#'  GMP       = 0.5,
+#'  CC        = 0.5,
+#'  row.names = rownames(ideals),
+#'  check.names = FALSE
+#')
+#' rc <- data.frame(
+#'  GMP = rep(0.5, nrow(midpoints)),
+#'  midpoint1D = midpoints[, 1],
+#'  midpoint2D = midpoints[, 2],
+#'  spread1D   = spreads[, 1],
+#'  spread2D   = spreads[, 2],
+#'  row.names  = rownames(midpoints),
+#'  check.names = FALSE
+#')
+#'weights <- c(1, 1)
+#'estimates <- list(legislators = leg, rollcalls = rc, weights = weights)
+#'class(estimates) <- "nomObject"
+#'
+#'# Attendance: exclude i5
+#'av <- c(1, 1, 1, 1, NA); names(av) <- rownames(ideals)
+#'vw <- rep(1, nrow(ideals))
+#'
+#'out_sov <- sov(
+#'  estimates     = estimates,
+#'  av            = av,
+#'  absolute      = FALSE,
+#'  pr            = 0.5001,
+#'  vw            = vw,
+#'  nPoints1      = 72,
+#'  nPoints2      = 72,
+#'  dec           = 3,
+#'  print_results = FALSE
+#')
+#'
+#' ### Plotting (2D): label with SOVs (no normals needed here) ###
+#' if (interactive()) {
+#'  sov_labels2d <- setNames(out_sov$pivot_summary$sov, out_sov$pivot_summary$name)
+#'  sov::plot_sov_geometry(ideals, label_values = sov_labels2d, digits = 3)
+#' }
 
 plot_sov_geometry <- function(ideals = NULL,
                               normals = NULL,
@@ -10,9 +81,110 @@ plot_sov_geometry <- function(ideals = NULL,
                               label_values = NULL,
                               digits = 3,
                               main = NULL) {
-  stopifnot(is.matrix(ideals), ncol(ideals) %in% 1:2)
+
+  # VALIDATORS
+
+  # Validate ideals
+  if (is.null(ideals)) {
+    stop("`ideals` must be supplied.", call. = FALSE)
+  }
+
+  if (!is.matrix(ideals) || !is.numeric(ideals)) {
+    stop("`ideals` must be a numeric matrix.", call. = FALSE)
+  }
+
+  if (!ncol(ideals) %in% c(1L, 2L)) {
+    stop("`ideals` must have either one or two columns.", call. = FALSE)
+  }
+
+  if (nrow(ideals) < 1L) {
+    stop("`ideals` must contain at least one row.", call. = FALSE)
+  }
+
+  if (anyNA(ideals) || any(!is.finite(ideals))) {
+    stop(
+      "`ideals` must contain only finite, non-missing values.",
+      call. = FALSE
+    )
+  }
+
   D <- ncol(ideals)
 
+  # Validate normals and midpoints are mutually exclusive
+  if (!is.null(normals) && !is.null(midpoints)) {
+    stop(
+      "Supply either `normals` or `midpoints`, not both.",
+      call. = FALSE
+    )
+  }
+
+  # Validate normals
+  if (!is.null(normals)) {
+    if (!is.matrix(normals) || !is.numeric(normals)) {
+      stop("`normals` must be a numeric matrix.", call. = FALSE)
+    }
+
+    if (ncol(normals) != D) {
+      stop(
+        sprintf(
+          "`normals` must have %d column%s to match `ideals`.",
+          D,
+          if (D == 1L) "" else "s"
+        ),
+        call. = FALSE
+      )
+    }
+
+    if (nrow(normals) < 1L) {
+      stop("`normals` must contain at least one row.", call. = FALSE)
+    }
+
+    if (anyNA(normals) || any(!is.finite(normals))) {
+      stop(
+        "`normals` must contain only finite, non-missing values.",
+        call. = FALSE
+      )
+    }
+
+    if (any(sqrt(rowSums(normals^2)) == 0)) {
+      stop(
+        "`normals` cannot contain zero-length vectors.",
+        call. = FALSE
+      )
+    }
+  }
+
+  # Validate midpoints
+  if (!is.null(midpoints)) {
+    if (!is.matrix(midpoints) || !is.numeric(midpoints)) {
+      stop("`midpoints` must be a numeric matrix.", call. = FALSE)
+    }
+
+    if (ncol(midpoints) != D) {
+      stop(
+        sprintf(
+          "`midpoints` must have %d column%s to match `ideals`.",
+          D,
+          if (D == 1L) "" else "s"
+        ),
+        call. = FALSE
+      )
+    }
+
+    if (nrow(midpoints) < 1L) {
+      stop("`midpoints` must contain at least one row.", call. = FALSE)
+    }
+
+    if (anyNA(midpoints) || any(!is.finite(midpoints))) {
+      stop(
+        "`midpoints` must contain only finite, non-missing values.",
+        call. = FALSE
+      )
+    }
+  }
+
+
+  # SUBSTANTIVE CODE (STARING WITH HELPERS)
   # utilities
   nm_or <- function(nm, fallback) if (!is.null(nm) && length(nm)) nm else fallback
 
@@ -73,8 +245,8 @@ plot_sov_geometry <- function(ideals = NULL,
     }
   }
 
+  ## ===== 1D =====
   if (D == 1) {
-    ## ===== 1D =====
     op <- par(no.readonly = TRUE); on.exit(par(op), add = TRUE)
     par(xaxs = "i", yaxs = "i", mar = c(5, 5, 2, 5))  # keep labels inside frame
 
@@ -123,7 +295,6 @@ plot_sov_geometry <- function(ideals = NULL,
     # optional midpoints in 1D (vertical dashed lines with RC labels near top)
     if (!is.null(midpoints)) {
       MP <- as.matrix(midpoints)
-      if (ncol(MP) > 1) MP <- MP[, 1, drop = FALSE]
       mp <- MP[, 1]
       rc_names <- if (!is.null(rownames(MP))) rownames(MP) else paste0("RC", seq_along(mp))
       y_top <- 0.25

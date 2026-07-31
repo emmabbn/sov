@@ -156,7 +156,7 @@ test_that("abstain (9) affects q under simple majority", {
                     dimnames = list(c("A","B","C"), "coord1D"))
   normals <- matrix(1, nrow = 1, dimnames = list("RC1","dim1"))
 
-  # Case 1: all vote (1/0 present), pr=0.67 -> q = ceil(0.67*3) = 3 -> pivot at 3rd -> "C"
+  # Case 1: all vote (1/0 present), pr=0.67 -> q = ceil(0.67*3) = 3 -> pivot at 3rd -> "A"
   votes_all <- matrix(c(1, 0, 1), nrow = 3,
                       dimnames = list(c("A","B","C"), "RC1"))
   out_all <- vs_sov_user(
@@ -167,10 +167,10 @@ test_that("abstain (9) affects q under simple majority", {
     pr       = 0.67,
     vw       = c(1,1,1)
   )
-  expect_equal(out_all$pivot_by_rc$Pivot[1], "C")
+  expect_equal(out_all$pivot_by_rc$Pivot[1], "A")
 
-  # Case 2: C abstains (9), only A/B count in q -> q = ceil(0.67*2) = 2 -> pivot at 2nd -> "B"
-  votes_9 <- matrix(c(1, 0, 9), nrow = 3,
+  # Case 2: B abstains (9), only A/C count in q -> q = ceil(0.67*2) = 2. But B can be pivot at 2nd -> "B"
+  votes_9 <- matrix(c(0, 9, 1), nrow = 3,
                     dimnames = list(c("A","B","C"), "RC1"))
   out_9 <- vs_sov_user(
     ideals   = ideals,

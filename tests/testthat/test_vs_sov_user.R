@@ -94,17 +94,17 @@ test_that("vs_sov_user uses provided voting weights (non-uniform vw changes resu
   )
   expect_identical(out_eq$pivot_by_rc$Pivot, "B")
 
-  # Heavier weight on A shifts the pivot to A
+  # Heavier weight on C shifts the pivot to C
   out_wt <- vs_sov_user(
     ideals        = ideals,
     normals       = normals,
     votes         = votes,
     absolute      = TRUE,
     q             = 2,
-    vw            = c(2, 1, 1),
+    vw            = c(1, 1, 2),
     print_results = FALSE
   )
-  expect_identical(out_wt$pivot_by_rc$Pivot, "A")
+  expect_identical(out_wt$pivot_by_rc$Pivot, "C")
 })
 
 test_that("vs_sov_user: when absolute=TRUE and q missing, defaults to absolute.maj(vw)", {

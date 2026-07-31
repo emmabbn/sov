@@ -40,10 +40,10 @@ test_that("2D case: vs_sov_user with three normals picks the expected pivots", {
 
   # Compute expected pivots by hand:
   # Projections along:
-  #  RC1 (+x):   0.7 (p1), 0.5 (p2), -0.5 (p3), -0.7 (p4) -> sorted: p4, p3, p2, p1 -> 3rd = p2
-  #  RC2 (+y):   0.7 (p1), -0.5 (p2), 0.5 (p3), -0.7 (p4) -> sorted: p4, p2, p3, p1 -> 3rd = p3
-  #  RC3 (-x):  -0.7 (p1), -0.5 (p2), 0.5 (p3),  0.7 (p4) -> sorted: p1, p2, p3, p4 -> 3rd = p3
-  expected <- c("p2","p3","p3")
+  #  RC1 (+x):   0.7 (p1), 0.5 (p2), -0.5 (p3), -0.7 (p4) -> sorted (descending): p1, p2, p3, p4 -> 3rd = p3
+  #  RC2 (+y):   0.7 (p1), -0.5 (p2), 0.5 (p3), -0.7 (p4) -> sorted (descending): p1, p3, p2, p4 -> 3rd = p2
+  #  RC3 (-x):  -0.7 (p1), -0.5 (p2), 0.5 (p3),  0.7 (p4) -> sorted (descending): p4, p3, p2, p1 -> 3rd = p2
+  expected <- c("p3","p2","p2")
 
   expect_equal(nrow(out$pivot_by_rc), 3L)
   expect_true("Pivot" %in% names(out$pivot_by_rc))
@@ -51,8 +51,8 @@ test_that("2D case: vs_sov_user with three normals picks the expected pivots", {
 
   # Also sanity-check the summary counts
   ps <- out$pivot_summary
-  expect_equal(ps$num_pivots[ps$name == "p2"], 1)
-  expect_equal(ps$num_pivots[ps$name == "p3"], 2)
+  expect_equal(ps$num_pivots[ps$name == "p2"], 2)
+  expect_equal(ps$num_pivots[ps$name == "p3"], 1)
   expect_equal(sum(ps$num_pivots), 3)
 })
 
@@ -109,7 +109,7 @@ test_that("2D case: vs_sov with OC-like estimates returns the same pivots", {
   )
 
   # Expected pivots for these three axis-aligned normals
-  expect_equal(out$pivot_by_rc$Pivot, c("p2","p3","p3"))
+  expect_equal(out$pivot_by_rc$Pivot, c("p3","p2","p2"))
 
   # --- Check ONLY the normal-vector columns exist and are named correctly ---
   nv_cols <- grep("^normVector\\d+D$", names(out$nv_and_angles), value = TRUE)
@@ -161,11 +161,11 @@ test_that("2D case (midpoints): vs_sov_user returns expected pivots across three
 
   expect_equal(nrow(out$pivot_by_rc), 3L)
   expect_true("Pivot" %in% names(out$pivot_by_rc))
-  expect_equal(out$pivot_by_rc$Pivot, c("p2","p3","p3"))
+  expect_equal(out$pivot_by_rc$Pivot, c("p3","p2","p2"))
 
   ps <- out$pivot_summary
-  expect_equal(ps$num_pivots[ps$name == "p2"], 1)
-  expect_equal(ps$num_pivots[ps$name == "p3"], 2)
+  expect_equal(ps$num_pivots[ps$name == "p2"], 2)
+  expect_equal(ps$num_pivots[ps$name == "p3"], 1)
   expect_equal(sum(ps$num_pivots), 3)
 })
 
@@ -201,7 +201,7 @@ test_that("2D (midpoints): polarity correction flips the normal when yeas are on
   )
 
   # Check pivot after flip
-  expect_equal(out$pivot_by_rc$Pivot[1], "p2")
+  expect_equal(out$pivot_by_rc$Pivot[1], "p3")
 
   # Check that reported angle reflects the flip (+x -> -x => ~180 degrees)
   # extract_angles() in 2D returns Angle_Degrees = atan2(y, x) in [0, 360).
@@ -296,7 +296,7 @@ test_that("MCMC 2D: vs_sov reproduces expected pivots using those midpoints", {
     print_results = FALSE
   )
 
-  expect_equal(out$pivot_by_rc$Pivot, c("p2","p3","p3"))
+  expect_equal(out$pivot_by_rc$Pivot, c("p3","p2","p2"))
 
   # Normal-vector columns exist; angles near {0, 90, 180}
   deg <- out$nv_and_angles$Angle_Degrees

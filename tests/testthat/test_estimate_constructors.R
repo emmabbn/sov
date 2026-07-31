@@ -51,7 +51,7 @@ test_that("WNOM constructor builds an object identify() recognizes and vs_sov ru
   rownames(votes) <- rownames(ideals)
 
   out <- vs_sov(estimates = est, votes = votes, absolute = TRUE, q = 3, print_results = FALSE)
-  expect_equal(out$pivot_by_rc$Pivot, c("p2","p3","p3"))
+  expect_equal(out$pivot_by_rc$Pivot, c("p3","p2","p2"))
 })
 
 
@@ -83,7 +83,7 @@ test_that("MCMC constructor: irt_cutpoints matches intended midpoints; vs_sov ru
 
   # Full pipeline should identify as mcmc internally and run
   out <- vs_sov(estimates = est, votes = votes, absolute = TRUE, q = 3, print_results = FALSE)
-  expect_equal(out$pivot_by_rc$Pivot, c("p2","p3","p3"))
+  expect_equal(out$pivot_by_rc$Pivot, c("p3","p2","p2"))
 })
 
 

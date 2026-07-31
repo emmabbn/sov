@@ -466,7 +466,7 @@ projections_and_polarity <- function(ideals, normals, votes, cps)
 }
 
 ##### psort_apply #####
-# Sorts each column of projv and vwmat in ascending order, preserving NA structure at the end.  Used in pivot().
+# Sorts each column of projv and vwmat in descending order, preserving NA structure at the end. Used in pivot().
 # inputs: projv is an unsorted matrix of projected values: num of legislators x num of rollcalls),
 #			vwmat is an unsorted matrix of voting weights: num of legislators x num of rollcalls).
 # outputs: projv and vmwat with each column individually sorted by values of projv.
@@ -474,7 +474,7 @@ psort_apply <- function(projv, vwmat) {
   res <- lapply(seq_len(ncol(projv)), function(j) {
     col_projv <- projv[, j]
     col_vw <- vwmat[, j]
-    ord <- order(col_projv, na.last = TRUE)
+    ord <- order(col_projv, decreasing = TRUE, na.last = TRUE)
     sorted_projv <- col_projv[ord]
     sorted_vw <- col_vw[ord]
     list(projv = sorted_projv, vw = sorted_vw)
@@ -532,7 +532,7 @@ pivot <- function(projv, vwmat, qvec, votes)
   projv[is.na(votes)] <- NA
   # remove row names so no one gets confused after sorting
   rownames(projv) <- NULL
-  # Sort projections and weights in ascending order or projv by individual roll call
+  # Sort projections and corresponding weights in descending order or projv by individual roll call
   ps <- psort_apply(projv, vwmat)
   # Compute pivot values
   pivotvs <- get_pivots(as.matrix(ps$projv), as.matrix(ps$vwmat), qvec)
