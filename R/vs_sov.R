@@ -134,7 +134,7 @@ vs_sov <- function(
   validate_vs_sov_args(estimates, weight_nom, absolute, vw, q, pr, dec, out_dir, print_results)
 
   # ISOLATE IDEALS, NORMALS, AND CPS
-  # determine whether user is using oc, wnom, mcmcPack, or other.
+  # determine whether user is using oc, wnom, MCMCpack, or other.
   type <- identify(estimates)
   # prep relative weight of dimensions (for type=="wnom", dummy for other types).
   W <- relative_weight(type, estimates, weight_nom)
