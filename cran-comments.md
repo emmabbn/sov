@@ -2,6 +2,6 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a resubmission. In response to the reviewer’s comments, I have:
-* Omitted one colon in documentation.
-* Ensured that the functions do not write in the user's home filespace
+* This update adds `plot_sov_geometry()` for visualizing one- and two-dimensional
+* SOV geometry and improves an internal function so that weighted votes are
+* accumulated in direction -r_k.
